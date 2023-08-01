@@ -39,7 +39,7 @@
 //#include "Quaternion.h"
 //#include <Matrix3x3.h>
 
-#include <adore_if_ros/graph_search_scheduling.h>
+#include <adore/fun/basicunstructuredplanner.h>
 
 namespace adore
 {
@@ -48,25 +48,18 @@ namespace adore
     /**
      * @brief Decoupled trajectory planner, which uses TrajectoryPlannerBase to compute and provide a PlanningResult in the event of a PlanningRequest
      */
-    class TrajectoryPlannerGraphSearch:public TrajectoryPlannerBase
+    class GraphSearch:public TrajectoryPlannerBase
     {
       private:
-      typedef adore::fun::BasicLaneFollowingPlanner<20,5> TNominalPlanner;
-      //typedef adore::fun::BasicMRMPlanner<20,5> TEmergencyPlanner;
-      TNominalPlanner* nominal_planner_;
-      //TEmergencyPlanner* emergency_planner_;
-
       adore::params::APVehicle* pvehicle_;
       adore::params::APTacticalPlanner* pTacticalPlanner_;
       adore::params::APTrajectoryGeneration* pTrajectoryGeneration_;
-      adore::params::APEmergencyOperation* pEmergencyOperation_;
       adore::params::APPrediction* ppred_;
       adore::env::NavigationGoalObserver ngo_;
       adore::env::ControlledConnectionSet4Ego connectionSet_;/**< state of controlled connections in area*/
       adore::env::ControlledConnectionSet4Ego checkPointSet_;/**< state of checkPoints in area*/
       adore::env::ConnectionsOnLane* connectionsOnLane_;/** map controlled connections to lane*/
       adore::env::ConnectionsOnLane* checkPointsOnLane_;/** map controlled connections to lane*/
-      //adore::env::ThreeLaneViewDecoupled three_lanes_;/**<lane-based representation of environment*/
       adore::env::DecoupledTrafficPredictionView prediction_;/**<collision detection based representation of traffic*/
       adore::fun::SPRTTCNominal ttcCost_;/**<collision detection based ttc computation*/
       adore::fun::SPRNonCoercive coercion_detection_;/**<collision detection vs expected behavior*/
@@ -83,12 +76,11 @@ namespace adore
       double lateral_i_grid_;/**grid index*/
       double const_penalty_;/**penalty, which is always added to cost*/
       public:
-      virtual ~TrajectoryPlannerLF()
+      virtual ~GraphSearch()
       {
-        delete nominal_planner_;
-        //delete emergency_planner_;
+
       }
-      TrajectoryPlannerLF(int id=0,std::string plannerName = "graph_search",double lateral_i_grid = 0.0):
+      GraphSearch(int id=0,std::string plannerName = "graph_search",double lateral_i_grid = 0.0):
            connectionSet_(adore::env::EnvFactoryInstance::get()->getVehicleMotionStateReader(),
                           adore::env::EnvFactoryInstance::get()->getControlledConnectionFeed()),
            checkPointSet_(adore::env::EnvFactoryInstance::get()->getVehicleMotionStateReader(),
@@ -101,44 +93,16 @@ namespace adore
            ttcCost_(&prediction_)
       {
         id_ = id;
-        lateral_i_grid_ = lateral_i_grid;
         const_penalty_ = 0.0;
         plannerName_ = plannerName;
         pvehicle_ = adore::params::ParamsFactoryInstance::get()->getVehicle();
         pTacticalPlanner_ = adore::params::ParamsFactoryInstance::get()->getTacticalPlanner();
         pTrajectoryGeneration_ = adore::params::ParamsFactoryInstance::get()->getTrajectoryGeneration();
-        pEmergencyOperation_ = adore::params::ParamsFactoryInstance::get()->getEmergencyOperation();
         ppred_ = adore::params::ParamsFactoryInstance::get()->getPrediction();
-        auto pLongitudinalPlanner = adore::params::ParamsFactoryInstance::get()->getLongitudinalPlanner();
-        auto pLateralPlanner = adore::params::ParamsFactoryInstance::get()->getLateralPlanner();
         auto pTacticalPlanner = adore::params::ParamsFactoryInstance::get()->getTacticalPlanner();
         connectionsOnLane_ = new adore::env::ConnectionsOnLane(three_lanes_.getCurrentLane(),&connectionSet_);
         checkPointsOnLane_ = new adore::env::ConnectionsOnLane(three_lanes_.getCurrentLane(),&checkPointSet_);
         //create nominal planner and add additional constraints
-        nominal_planner_ = new TNominalPlanner(
-                                three_lanes_.getCurrentLane(),
-                                &ngo_,
-                                connectionsOnLane_,
-                                checkPointsOnLane_,
-                                pLongitudinalPlanner,
-                                pLateralPlanner,
-                                pTacticalPlanner,
-                                pvehicle_,
-                                pTrajectoryGeneration_,
-                                lateral_i_grid);
-
-        //create emergency planner 
-        /*emergency_planner_ = new TEmergencyPlanner(three_lanes_.getCurrentLane(),
-                          pLateralPlanner,
-                          pTacticalPlanner,
-                          pvehicle_,
-                          pTrajectoryGeneration_,
-                          lateral_i_grid);
-        emergency_planner_->setJMax(10.0);
-        emergency_planner_->setTStall(0.1);
-        emergency_planner_->setAStall(-2.0);
-        emergency_planner_->setAMin(-2.0);
-        emergency_planner_->setSecondAttempt(false);*/
 
       }
 
