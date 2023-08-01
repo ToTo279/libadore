@@ -38,6 +38,9 @@
 //#include "Vector3.h"
 //#include "Quaternion.h"
 //#include <Matrix3x3.h>
+
+#include <adore_if_ros/graph_search_scheduling.h>
+
 namespace adore
 {
 namespace apps
@@ -119,8 +122,8 @@ namespace apps
 
        //adore::fun::VornoiDiagram::update(figure);
        
-            StartPose_subscreiber= node_->subscribe<geometry_msgs::Pose>("SIM/StartPose",1,&GraphSearch::receiveStartPose,this);
-            EndPose_subscreiber= node_->subscribe<geometry_msgs::Pose>("SIM/EndPose",1,&GraphSearch::receiveEndPose,this);
+            StartPose_subscreiber= node_->subscribe<geometry_msgs::Pose>("SIM/StartPose",1,&adore_if_ros_scheduling::GraphSearch::receiveStartPose,this);
+            EndPose_subscreiber= node_->subscribe<geometry_msgs::Pose>("SIM/EndPose",1,&adore_if_ros_scheduling::GraphSearch::receiveEndPose,this);
             
             while(iteration<2 && validStart && validEnd)
             {
@@ -144,7 +147,7 @@ namespace apps
             }
 
         }
-        void receiveStartPose(geometry_msgs::Pose msg)
+        /*void receiveStartPose(geometry_msgs::Pose msg)
         {
                     double r,p,y;
                     tf::Matrix3x3(tf::Quaternion(msg.orientation.x,msg.orientation.y,msg.orientation.z,msg.orientation.w)).getRPY(r,p,y);
@@ -157,7 +160,7 @@ namespace apps
                     tf::Matrix3x3(tf::Quaternion(msg.orientation.x,msg.orientation.y,msg.orientation.z,msg.orientation.w)).getRPY(r,p,y);
                     validEnd = End.setPosition(msg.position.x,msg.position.y,y,Width,Length,Depth, adore::mad::CoordinateConversion::DegToRad(HeadingResolution),  figure3);
                     //End.print();
-        }              
+        } */             
     };
 }
 }
