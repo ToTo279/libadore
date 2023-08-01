@@ -43,77 +43,106 @@
 
 namespace adore
 {
-namespace apps
-{
+  namespace apps
+  {
     /**
-     * 
+     * @brief Decoupled trajectory planner, which uses TrajectoryPlannerBase to compute and provide a PlanningResult in the event of a PlanningRequest
      */
-    class GraphSearch
+    class TrajectoryPlannerGraphSearch:public TrajectoryPlannerBase
     {
-        private:
-        //typedef boost::geometry::model::point<double,2,boost::geometry::cs::cartesian> Vector;
-            DLR_TS::PlotLab::FigureStubFactory fig_factory;
-            DLR_TS::PlotLab::AFigureStub* figure3;  
-            DLR_TS::PlotLab::AFigureStub* figure4; 
-            DLR_TS::PlotLab::AFigureStub* figure5;         
-            int time1, time2;
-            std::chrono::system_clock::time_point  start;
-            std::chrono::system_clock::time_point  end;        
-            static const int Length = 80; //73;
-            static const int Width = 20;//20;  
-            static const int HeadingResolution = 5;  
-            static const int nH_Type = 3;  //non holonomic
-            static const int H_Type = 2;  //holonomic
-            int Depth;      
-            adore::env::OccupanyGrid OG;
-            adore::fun::GRID<adore::fun::Node<nH_Type,double>> NH_GRID;
-            ros::Subscriber StartPose_subscreiber; 
-            ros::Subscriber EndPose_subscreiber; 
-            //adore::fun::ArrayFormGrid<adore::fun::Node<nH_Type,double>> NH_GRID;
-            adore::fun::Hybrid_A_Star* h_A_star;
-            adore::fun::Node<3,double> Start;
-            adore::fun::Node<3,double> End;
-            bool validStart, validEnd;
-            adore::fun::CollisionCheckOffline* cco;
-            ros::NodeHandle* node_;
-            fun::TrajectorySmoothing* smoothing;
-            double avg_time;
-            double vehicleLength, vehicleWidth;
-            int iteration;
+      private:
+      typedef adore::fun::BasicLaneFollowingPlanner<20,5> TNominalPlanner;
+      //typedef adore::fun::BasicMRMPlanner<20,5> TEmergencyPlanner;
+      TNominalPlanner* nominal_planner_;
+      //TEmergencyPlanner* emergency_planner_;
 
-        
-        public:
-        GraphSearch(ros::NodeHandle* parentnode)
-        {
-            vehicleLength = 3.2;
-            vehicleWidth = 1.0; 
-            smoothing = new fun::TrajectorySmoothing;
-            h_A_star = new adore::fun::Hybrid_A_Star(smoothing);
-            node_ = parentnode;
-            figure3 = fig_factory.createFigureStub(3);
-            figure3->showAxis();
-            figure3->showGrid();
-            figure3->show();  
-            figure4 = fig_factory.createFigureStub(4);
-            figure4->showAxis();
-            figure4->showGrid();
-            figure4->show();   
-            figure5 = fig_factory.createFigureStub(5);
-            figure5->showAxis();
-            figure5->showGrid();
-            figure5->show();                               
-            Depth = 360 / HeadingResolution;
-            cco = new adore::fun::CollisionCheckOffline(vehicleWidth, vehicleLength, HeadingResolution, 10);
-            OG.resize(Width,Length,figure3);
-            NH_GRID.resize(Width,Length,Depth);
-            h_A_star->setSize(Width,Length);
-            avg_time = 0.0;
-            iteration = 1;
-            
+      adore::params::APVehicle* pvehicle_;
+      adore::params::APTacticalPlanner* pTacticalPlanner_;
+      adore::params::APTrajectoryGeneration* pTrajectoryGeneration_;
+      adore::params::APEmergencyOperation* pEmergencyOperation_;
+      adore::params::APPrediction* ppred_;
+      adore::env::NavigationGoalObserver ngo_;
+      adore::env::ControlledConnectionSet4Ego connectionSet_;/**< state of controlled connections in area*/
+      adore::env::ControlledConnectionSet4Ego checkPointSet_;/**< state of checkPoints in area*/
+      adore::env::ConnectionsOnLane* connectionsOnLane_;/** map controlled connections to lane*/
+      adore::env::ConnectionsOnLane* checkPointsOnLane_;/** map controlled connections to lane*/
+      //adore::env::ThreeLaneViewDecoupled three_lanes_;/**<lane-based representation of environment*/
+      adore::env::DecoupledTrafficPredictionView prediction_;/**<collision detection based representation of traffic*/
+      adore::fun::SPRTTCNominal ttcCost_;/**<collision detection based ttc computation*/
+      adore::fun::SPRNonCoercive coercion_detection_;/**<collision detection vs expected behavior*/
+      adore::env::DecoupledConflictPointView conflicts_;/**cross traffic conflicts*/
+
+      /**
+       * combined maneuver post-processing constraints
+       */
+      adore::fun::SPRInvariantCollisionFreedom collision_detection_;/**<collision detection with traffic predictions*/
 
 
-        }
-        
+      int id_;/**<integral id to be written to PlanningResult*/
+      std::string plannerName_;/**human readable planner name written to PlanningResult*/
+      double lateral_i_grid_;/**grid index*/
+      double const_penalty_;/**penalty, which is always added to cost*/
+      public:
+      virtual ~TrajectoryPlannerLF()
+      {
+        delete nominal_planner_;
+        //delete emergency_planner_;
+      }
+      TrajectoryPlannerLF(int id=0,std::string plannerName = "graph_search",double lateral_i_grid = 0.0):
+           connectionSet_(adore::env::EnvFactoryInstance::get()->getVehicleMotionStateReader(),
+                          adore::env::EnvFactoryInstance::get()->getControlledConnectionFeed()),
+           checkPointSet_(adore::env::EnvFactoryInstance::get()->getVehicleMotionStateReader(),
+                          adore::env::EnvFactoryInstance::get()->getCheckPointFeed()),
+           ngo_(adore::env::EnvFactoryInstance::get(),three_lanes_.getCurrentLane(),0,0),
+           prediction_(),
+           coercion_detection_(&prediction_),
+           //conflicts_(three_lanes_.getCurrentLane()),
+           collision_detection_(&prediction_),
+           ttcCost_(&prediction_)
+      {
+        id_ = id;
+        lateral_i_grid_ = lateral_i_grid;
+        const_penalty_ = 0.0;
+        plannerName_ = plannerName;
+        pvehicle_ = adore::params::ParamsFactoryInstance::get()->getVehicle();
+        pTacticalPlanner_ = adore::params::ParamsFactoryInstance::get()->getTacticalPlanner();
+        pTrajectoryGeneration_ = adore::params::ParamsFactoryInstance::get()->getTrajectoryGeneration();
+        pEmergencyOperation_ = adore::params::ParamsFactoryInstance::get()->getEmergencyOperation();
+        ppred_ = adore::params::ParamsFactoryInstance::get()->getPrediction();
+        auto pLongitudinalPlanner = adore::params::ParamsFactoryInstance::get()->getLongitudinalPlanner();
+        auto pLateralPlanner = adore::params::ParamsFactoryInstance::get()->getLateralPlanner();
+        auto pTacticalPlanner = adore::params::ParamsFactoryInstance::get()->getTacticalPlanner();
+        connectionsOnLane_ = new adore::env::ConnectionsOnLane(three_lanes_.getCurrentLane(),&connectionSet_);
+        checkPointsOnLane_ = new adore::env::ConnectionsOnLane(three_lanes_.getCurrentLane(),&checkPointSet_);
+        //create nominal planner and add additional constraints
+        nominal_planner_ = new TNominalPlanner(
+                                three_lanes_.getCurrentLane(),
+                                &ngo_,
+                                connectionsOnLane_,
+                                checkPointsOnLane_,
+                                pLongitudinalPlanner,
+                                pLateralPlanner,
+                                pTacticalPlanner,
+                                pvehicle_,
+                                pTrajectoryGeneration_,
+                                lateral_i_grid);
+
+        //create emergency planner 
+        /*emergency_planner_ = new TEmergencyPlanner(three_lanes_.getCurrentLane(),
+                          pLateralPlanner,
+                          pTacticalPlanner,
+                          pvehicle_,
+                          pTrajectoryGeneration_,
+                          lateral_i_grid);
+        emergency_planner_->setJMax(10.0);
+        emergency_planner_->setTStall(0.1);
+        emergency_planner_->setAStall(-2.0);
+        emergency_planner_->setAMin(-2.0);
+        emergency_planner_->setSecondAttempt(false);*/
+
+      }
+
+
 
 
         void setConstPenalty(double value)
