@@ -18,8 +18,8 @@
 #include <adore/apps/if_plotlab/plot_shape.h>
 #include <boost/container/vector.hpp>
 
-#include <boost/geometry.h>
-#include <Eigen/Dense>
+#include <boost/geometry.hpp>
+#include <eigen3/Eigen/Dense>
 
 //#include <adore/fun
 namespace adore
