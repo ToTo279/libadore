@@ -113,6 +113,9 @@ namespace apps
 
 
         }
+        
+
+
         void setConstPenalty(double value)
         {
             const_penalty_ = value;
@@ -149,8 +152,8 @@ namespace apps
             planning_result.nominal_maneuver_valid = false;
             planning_result.combined_maneuver_valid = false;
 
-            three_lanes_.update();
-            auto current = three_lanes_.getCurrentLane();
+            //three_lanes_.update();
+            //auto current = three_lanes_.getCurrentLane();
             ngo_.update();
             connectionSet_.update();
             connectionsOnLane_->update();
@@ -263,13 +266,14 @@ namespace apps
 
             planning_result.combined_maneuver_valid = true;
             int laneid = 0;
-            adore::fun::SPRNavigationCostOnLane navcostOnLane(&three_lanes_,pTacticalPlanner_,laneid);
+            /*adore::fun::SPRNavigationCostOnLane navcostOnLane(&three_lanes_,pTacticalPlanner_,laneid);
             planning_result.objective_values.insert({navcostOnLane.getName(),
                                                     navcostOnLane.getCost(planning_result.nominal_maneuver)});
 
             adore::fun::SPRNormalizedNavigationCost navcostNormalized(&three_lanes_,pTacticalPlanner_,laneid);
             planning_result.objective_values.insert({navcostNormalized.getName(),
                                                     navcostNormalized.getCost(planning_result.nominal_maneuver)});
+            */
 
             adore::fun::SPRLongitudinalAcceleration2Cost lacccost;
             planning_result.objective_values.insert({lacccost.getName(),
