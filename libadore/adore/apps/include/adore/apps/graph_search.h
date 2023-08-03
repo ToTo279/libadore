@@ -33,6 +33,20 @@
 #include <ctime>
 #include <chrono>
 
+#include <adore/fun/afactory.h>
+#include <adore/env/afactory.h>
+#include <adore/params/afactory.h>
+#include <adore/fun/tac/basiclanefollowingplanner.h>
+#include <adore/fun/tac/basicmrmplanner.h>
+#include <adore/env/navigationgoalobserver.h>
+#include <adore/env/tcd/connectionsonlane.h>
+//#include <adore/env/threelaneviewdecoupled.h>
+#include <adore/fun/tac/basicsetpointrequestevaluators.h>
+#include <adore/env/traffic/decoupledtrafficpredictionview.h>
+#include <adore/apps/trajectory_planner_base.h>
+#include <adore/fun/safety/setpointrequestswath.h>
+#include <adore/env/traffic/decoupledconflictpointview.h>
+
 
 //New:
 //#include "Vector3.h"
@@ -48,6 +62,7 @@ namespace adore
     /**
      * @brief Decoupled trajectory planner, which uses TrajectoryPlannerBase to compute and provide a PlanningResult in the event of a PlanningRequest
      */
+    
     class GraphSearch:public TrajectoryPlannerBase
     {
       private:
@@ -78,17 +93,17 @@ namespace adore
       public:
       virtual ~GraphSearch()
       {
-
+            delete basicunstructuredplanner_;
       }
       GraphSearch(int id=0,std::string plannerName = "graph_search",double lateral_i_grid = 0.0):
            connectionSet_(adore::env::EnvFactoryInstance::get()->getVehicleMotionStateReader(),
                           adore::env::EnvFactoryInstance::get()->getControlledConnectionFeed()),
            checkPointSet_(adore::env::EnvFactoryInstance::get()->getVehicleMotionStateReader(),
                           adore::env::EnvFactoryInstance::get()->getCheckPointFeed()),
-           ngo_(adore::env::EnvFactoryInstance::get(),three_lanes_.getCurrentLane(),0,0),
+           //ngo_(adore::env::EnvFactoryInstance::get(),three_lanes_.getCurrentLane(),0,0),
            prediction_(),
            coercion_detection_(&prediction_),
-           //conflicts_(three_lanes_.getCurrentLane()),
+           conflicts_(three_lanes_.getCurrentLane()),
            collision_detection_(&prediction_),
            ttcCost_(&prediction_)
       {
@@ -100,8 +115,8 @@ namespace adore
         pTrajectoryGeneration_ = adore::params::ParamsFactoryInstance::get()->getTrajectoryGeneration();
         ppred_ = adore::params::ParamsFactoryInstance::get()->getPrediction();
         auto pTacticalPlanner = adore::params::ParamsFactoryInstance::get()->getTacticalPlanner();
-        connectionsOnLane_ = new adore::env::ConnectionsOnLane(three_lanes_.getCurrentLane(),&connectionSet_);
-        checkPointsOnLane_ = new adore::env::ConnectionsOnLane(three_lanes_.getCurrentLane(),&checkPointSet_);
+        //connectionsOnLane_ = new adore::env::ConnectionsOnLane(three_lanes_.getCurrentLane(),&connectionSet_);
+        //checkPointsOnLane_ = new adore::env::ConnectionsOnLane(three_lanes_.getCurrentLane(),&checkPointSet_);
         //create nominal planner and add additional constraints
 
       }
@@ -109,27 +124,28 @@ namespace adore
 
 
 
-        void setConstPenalty(double value)
+
+        /*void setConstPenalty(double value)
         {
             const_penalty_ = value;
         }
         void setSpeedScale(double value)
         {
-            nominal_planner_->setSpeedScale(value);
+            basicunstructeredplanner_->setSpeedScale(value);
         }
 
         void setStopPoint(int value)
         {
         if(value<0)
             {
-            nominal_planner_->setConflictSet(nullptr);
+            basicunstructeredplanner_->setConflictSet(nullptr);
             }
             else
             {
-            nominal_planner_->setConflictSet(&conflicts_);
+            basicunstructeredplanner_->setConflictSet(&conflicts_);
             }
 
-        }
+        }*/
 
         /**
         * @brief update data, views and recompute maneuver
@@ -154,26 +170,40 @@ namespace adore
             checkPointsOnLane_->update();
             conflicts_.update();
 
+            adore::fun::BasicUnstructuredPlanner *basicunstructuredplanner_ = new adore::fun::BasicUnstructuredPlanner();
 
-            if(!current->isValid())
+            /*if(!current->isValid())
             {
                 planning_result.status_string = "current lane invalid";
                 return;
-            }
+            }*/
 
             prediction_.update();
 
             auto x0=planning_request.initial_state.toMotionState();
-            nominal_planner_->compute(x0);
+            /*nominal_planner_->compute(x0);
             if(!nominal_planner_->hasValidPlan())
             {
             planning_result.status_string = "nominal maneuver planning failed, "+ nominal_planner_->getStatus();
             return;
+            }*/
+
+            basicunstructuredplanner_->compute(x0);
+            if(!basicunstructuredplanner_->hasValidPlan())
+            {
+            planning_result.status_string = "nominal maneuver planning failed, "+ basicunstructuredplanner_->getStatus();
+            return;
             }
 
-            nominal_planner_->getSetPointRequest()->copyTo(planning_result.nominal_maneuver);
+            /*nominal_planner_->getSetPointRequest()->copyTo(planning_result.nominal_maneuver);
             planning_result.nominal_maneuver_valid = true;
-            auto x0em = nominal_planner_->getSetPointRequest()->interpolateSetPoint(planning_request.t_emergency_start,pvehicle_);
+            auto x0em = nominal_planner_->getSetPointRequest()->interpolateSetPoint(planning_request.t_emergency_start,pvehicle_);*/
+
+            
+            basicunstructuredplanner_->getSetPointRequest()->copyTo(planning_result.nominal_maneuver);
+            planning_result.nominal_maneuver_valid = true;
+            //auto x0em = basicunstructeredplanner_->getSetPointRequest()->interpolateSetPoint(planning_request.t_emergency_start,pvehicle_);
+
             //emergency_planner_->setJMax(-pEmergencyOperation_->getEmergencyManeuverJMin());
             //emergency_planner_->setTStall(pEmergencyOperation_->getEmergencyManeuverTStall());
 
@@ -210,7 +240,8 @@ namespace adore
             }*/
 
             planning_result.combined_maneuver.setPoints.clear();
-            nominal_planner_->getSetPointRequest()->copyTo(planning_result.combined_maneuver,0);
+            //nominal_planner_->getSetPointRequest()->copyTo(planning_result.combined_maneuver,0);
+            basicunstructuredplanner_>getSetPointRequest()->copyTo(planning_result.combined_maneuver,0);
             planning_result.combined_maneuver.removeAfter(planning_request.t_emergency_start);
             planning_result.combined_maneuver.setPoints.back().tEnd = planning_request.t_emergency_start;
             //emergency_planner_->getSetPointRequest()->copyTo(planning_result.combined_maneuver,1);
@@ -313,7 +344,7 @@ namespace adore
                 break;
             }
         }
-    }
+    };
 }
 }
 

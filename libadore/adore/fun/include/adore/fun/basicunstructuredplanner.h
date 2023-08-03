@@ -20,7 +20,8 @@
 #include <adore/fun/hybrid_A_star.h>
 #include <plotlablib/figurestubfactory.h>
 #include <adore/fun/collision_check_offline.h>
-#include <adore/fun/anominalplanner.h>
+#include <adore/fun/tac/anominalplanner.h>
+//#include <libadore/libadore/adore/fun/include/adore/fun/tac/anominalplanner.h>
 //#include <adore/fun/vornoi_diagram.h>//
 #include <plotlablib/afigurestub.h>
 #include <geometry_msgs/Pose.h>
@@ -128,8 +129,8 @@ namespace fun
 
                 std::cout<<"\nITERATION: "<<iteration;
                 startTime = std::chrono::system_clock::now();
-                time1 = 0.0;
-                time2 = 0.0;
+                //time1 = 0.0; error: ‘time1’ was not declared in this scope; did you mean ‘time’?
+                //time2 = 0.0;
                    
                 //std::cout<<"\n"<<   cco->offlineCollisionTable.size()<<"\t"<<cco->offlineCollisionTable[0].size1()<<"\t"<<cco->offlineCollisionTable[0].size2();   
                 h_A_star->plan(&NH_GRID,&OG, cco, &Start,&End,HeadingResolution,1000, vehicleWidth, vehicleLength ,figure3,figure4,figure5);            
@@ -154,10 +155,11 @@ namespace fun
         /**
          *  getCPUTime - return the time require for trajectory planning in seconds
          */
-        virtual double getCPUTime()const  override
+        /*virtual double getCPUTime()const  override
         {
-            return chrono::duration_cast<chrono::milliseconds>(end_time - start_time); 
-        }
+            return std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
+            //return static_cast<double>(std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime)); 
+        }*/
 
 
 
