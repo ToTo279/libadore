@@ -66,6 +66,10 @@ namespace adore
     class GraphSearch:public TrajectoryPlannerBase
     {
       private:
+      typedef adore::fun::BasicUnstructuredPlanner TUnstructuredPlanner;
+      TUnstructuredPlanner* basicunstructuredplanner_;
+
+
       adore::params::APVehicle* pvehicle_;
       adore::params::APTacticalPlanner* pTacticalPlanner_;
       adore::params::APTrajectoryGeneration* pTrajectoryGeneration_;
@@ -103,7 +107,7 @@ namespace adore
            //ngo_(adore::env::EnvFactoryInstance::get(),three_lanes_.getCurrentLane(),0,0),
            prediction_(),
            coercion_detection_(&prediction_),
-           conflicts_(three_lanes_.getCurrentLane()),
+           //conflicts_(three_lanes_.getCurrentLane()),
            collision_detection_(&prediction_),
            ttcCost_(&prediction_)
       {
@@ -170,7 +174,6 @@ namespace adore
             checkPointsOnLane_->update();
             conflicts_.update();
 
-            adore::fun::BasicUnstructuredPlanner *basicunstructuredplanner_ = new adore::fun::BasicUnstructuredPlanner();
 
             /*if(!current->isValid())
             {
@@ -241,7 +244,8 @@ namespace adore
 
             planning_result.combined_maneuver.setPoints.clear();
             //nominal_planner_->getSetPointRequest()->copyTo(planning_result.combined_maneuver,0);
-            basicunstructuredplanner_>getSetPointRequest()->copyTo(planning_result.combined_maneuver,0);
+            basicunstructuredplanner_>adore::fun::SetPointRequest()->copyTo(planning_result.combined_maneuver,0);
+            //basicunstructuredplanner_>getSetPointRequest()->copyTo(planning_result.combined_maneuver,0);
             planning_result.combined_maneuver.removeAfter(planning_request.t_emergency_start);
             planning_result.combined_maneuver.setPoints.back().tEnd = planning_request.t_emergency_start;
             //emergency_planner_->getSetPointRequest()->copyTo(planning_result.combined_maneuver,1);
