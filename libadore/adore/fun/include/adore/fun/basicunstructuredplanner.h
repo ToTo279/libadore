@@ -155,11 +155,10 @@ namespace fun
         /**
          *  getCPUTime - return the time require for trajectory planning in seconds
          */
-        /*virtual double getCPUTime()const  override
+        virtual double getCPUTime()const  override
         {
-            return std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
-            //return static_cast<double>(std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime)); 
-        }*/
+            return std::chrono::duration<double>(endTime - startTime).count(); 
+        }
 
 
 

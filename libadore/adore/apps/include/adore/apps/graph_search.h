@@ -54,7 +54,7 @@ namespace adore
       adore::params::APTacticalPlanner* pTacticalPlanner_;
       adore::params::APTrajectoryGeneration* pTrajectoryGeneration_;
       adore::params::APPrediction* ppred_;
-      adore::env::NavigationGoalObserver ngo_;
+      //adore::env::NavigationGoalObserver ngo_;
       adore::env::ControlledConnectionSet4Ego connectionSet_;/**< state of controlled connections in area*/
       adore::env::ControlledConnectionSet4Ego checkPointSet_;/**< state of checkPoints in area*/
       adore::env::ConnectionsOnLane* connectionsOnLane_;/** map controlled connections to lane*/
@@ -62,7 +62,7 @@ namespace adore
       adore::env::DecoupledTrafficPredictionView prediction_;/**<collision detection based representation of traffic*/
       adore::fun::SPRTTCNominal ttcCost_;/**<collision detection based ttc computation*/
       adore::fun::SPRNonCoercive coercion_detection_;/**<collision detection vs expected behavior*/
-      adore::env::DecoupledConflictPointView conflicts_;/**cross traffic conflicts*/
+      //adore::env::DecoupledConflictPointView conflicts_;/**cross traffic conflicts*/
 
       /**
        * combined maneuver post-processing constraints
@@ -148,12 +148,12 @@ namespace adore
 
             //three_lanes_.update();
             //auto current = three_lanes_.getCurrentLane();
-            ngo_.update();
+            //ngo_.update();
             connectionSet_.update();
             connectionsOnLane_->update();
             checkPointSet_.update();
             checkPointsOnLane_->update();
-            conflicts_.update();
+            //conflicts_.update();
 
 
             /*if(!current->isValid())
