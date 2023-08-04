@@ -13,26 +13,6 @@
  ********************************************************************************/
 #pragma once
 
-#include <adore/env/map/occupancy_grid.h>
-#include <eigen3/Eigen/Core>
-#include <adore/fun/node.h>
-#include <adore/fun/search_grid.h>
-#include <adore/fun/hybrid_A_star.h>
-#include <plotlablib/figurestubfactory.h>
-#include <adore/fun/collision_check_offline.h>
-//#include <adore/fun/vornoi_diagram.h>//
-#include <plotlablib/afigurestub.h>
-#include <geometry_msgs/Pose.h>
-//#include <adore/mad/catmull_rom_splines.h>//
-#include <boost/geometry.hpp>
-#include <boost/geometry/strategies/transform/matrix_transformers.hpp>
-#include <boost/geometry/geometries/point_xy.hpp>
-#include <boost/geometry/geometries/polygon.hpp>
-#include <boost/geometry/geometries/multi_polygon.hpp>
-#include <adore/fun/trajectory_smoothing.h>
-#include <ctime>
-#include <chrono>
-
 #include <adore/fun/afactory.h>
 #include <adore/env/afactory.h>
 #include <adore/params/afactory.h>
@@ -99,6 +79,7 @@ namespace adore
       {
             delete basicunstructuredplanner_;
       }
+
       GraphSearch(int id=0,std::string plannerName = "graph_search",double lateral_i_grid = 0.0):
            connectionSet_(adore::env::EnvFactoryInstance::get()->getVehicleMotionStateReader(),
                           adore::env::EnvFactoryInstance::get()->getControlledConnectionFeed()),
@@ -184,86 +165,34 @@ namespace adore
             prediction_.update();
 
             auto x0=planning_request.initial_state.toMotionState();
-            /*nominal_planner_->compute(x0);
-            if(!nominal_planner_->hasValidPlan())
-            {
-            planning_result.status_string = "nominal maneuver planning failed, "+ nominal_planner_->getStatus();
-            return;
-            }*/
+
 
             basicunstructuredplanner_->compute(x0);
             if(!basicunstructuredplanner_->hasValidPlan())
             {
-            planning_result.status_string = "nominal maneuver planning failed, "+ basicunstructuredplanner_->getStatus();
-            return;
+                planning_result.status_string = "nominal maneuver planning failed, ";//+ basicunstructuredplanner_->getStatus();
+                return;
             }
 
-            /*nominal_planner_->getSetPointRequest()->copyTo(planning_result.nominal_maneuver);
-            planning_result.nominal_maneuver_valid = true;
-            auto x0em = nominal_planner_->getSetPointRequest()->interpolateSetPoint(planning_request.t_emergency_start,pvehicle_);*/
 
             
             basicunstructuredplanner_->getSetPointRequest()->copyTo(planning_result.nominal_maneuver);
             planning_result.nominal_maneuver_valid = true;
             //auto x0em = basicunstructeredplanner_->getSetPointRequest()->interpolateSetPoint(planning_request.t_emergency_start,pvehicle_);
 
-            //emergency_planner_->setJMax(-pEmergencyOperation_->getEmergencyManeuverJMin());
-            //emergency_planner_->setTStall(pEmergencyOperation_->getEmergencyManeuverTStall());
-
-            // adore::fun::RestartEffort re;  //test whether trajectory is long enough to justify restarting from ~0
-            // if(!re.isValid(planning_result.nominal_maneuver))
-            // {
-            //   planning_result.status_string = "not restarting, maneuver too short";
-            //   return;
-            // }
-
-            //if emergencyManeuverAMax and AMin are different, compute three maneuvers for {amin, (amin+amax)/2, amax}
-            //otherwise compute just one maneuver for amin
-            /*std::vector<double> emergency_acceleration;
-            emergency_acceleration.push_back(pEmergencyOperation_->getEmergencyManeuverAMin());
-            if(  pEmergencyOperation_->getEmergencyManeuverAMax()
-            - pEmergencyOperation_->getEmergencyManeuverAMin() > 0.01 )
-            {
-            emergency_acceleration.push_back((pEmergencyOperation_->getEmergencyManeuverAMin()
-                                            + pEmergencyOperation_->getEmergencyManeuverAMax())*0.5);
-            emergency_acceleration.push_back(pEmergencyOperation_->getEmergencyManeuverAMax());
-            }
-
             bool collision_detection_passed = false;
 
-            for(double a_em:emergency_acceleration)
-            {
-            emergency_planner_->setAStall(a_em);
-            emergency_planner_->setAMin(a_em);
-            emergency_planner_->compute(x0em.toMotionState());
-
-            if(!emergency_planner_->hasValidPlan() ) 
-            {
-                continue;
-            }*/
-
             planning_result.combined_maneuver.setPoints.clear();
-            //nominal_planner_->getSetPointRequest()->copyTo(planning_result.combined_maneuver,0);
-            basicunstructuredplanner_>adore::fun::SetPointRequest()->copyTo(planning_result.combined_maneuver,0);
-            //basicunstructuredplanner_>getSetPointRequest()->copyTo(planning_result.combined_maneuver,0);
+            basicunstructuredplanner_->getSetPointRequest()->copyTo(planning_result.combined_maneuver,0);
             planning_result.combined_maneuver.removeAfter(planning_request.t_emergency_start);
             planning_result.combined_maneuver.setPoints.back().tEnd = planning_request.t_emergency_start;
-            //emergency_planner_->getSetPointRequest()->copyTo(planning_result.combined_maneuver,1);
 
-
-            if(collision_detection_.isValid(planning_result.combined_maneuver))
+            /*if(collision_detection_.isValid(planning_result.combined_maneuver))
             {
                 collision_detection_passed = true;
                 break;
-            }
-            //}
-
-
-            /*if(!emergency_planner_->hasValidPlan() ) 
-            {
-            planning_result.status_string += "emergency maneuver planning failed";
-            return;
             }*/
+
 
             double front_buffer_space = pTacticalPlanner_->getCollisionDetectionFrontBufferSpace();
             double lateral_precision = pTacticalPlanner_->getCollisionDetectionLateralPrecision();
