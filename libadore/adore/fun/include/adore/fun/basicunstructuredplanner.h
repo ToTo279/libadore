@@ -120,6 +120,8 @@ namespace fun
         
         virtual void compute(const VehicleMotionState9d& initial_state) override
         {
+            hasValidPlan_ = false;
+            
             setStart(initial_state);
             //TO DO: final_state erstellen
             //setEnd(final_state);
