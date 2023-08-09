@@ -58,10 +58,10 @@ namespace fun
     {
         private:
         //typedef boost::geometry::model::point<double,2,boost::geometry::cs::cartesian> Vector;
-            DLR_TS::PlotLab::FigureStubFactory fig_factory;
+            /*DLR_TS::PlotLab::FigureStubFactory fig_factory;
             DLR_TS::PlotLab::AFigureStub* figure3;  
             DLR_TS::PlotLab::AFigureStub* figure4; 
-            DLR_TS::PlotLab::AFigureStub* figure5;         
+            DLR_TS::PlotLab::AFigureStub* figure5;*/         
             std::chrono::system_clock::time_point  startTime;
             std::chrono::system_clock::time_point  endTime;        
             static const int Length = 80; //73;
@@ -93,7 +93,7 @@ namespace fun
             vehicleWidth = 1.0; 
             smoothing = new fun::TrajectorySmoothing;
             h_A_star = new adore::fun::Hybrid_A_Star(smoothing);
-            figure3 = fig_factory.createFigureStub(3);
+            /*figure3 = fig_factory.createFigureStub(3);
             figure3->showAxis();
             figure3->showGrid();
             figure3->show();  
@@ -104,7 +104,8 @@ namespace fun
             figure5 = fig_factory.createFigureStub(5);
             figure5->showAxis();
             figure5->showGrid();
-            figure5->show();                               
+            figure5->show();*/
+            adore::app                               
             Depth = 360 / HeadingResolution;
             cco = new adore::fun::CollisionCheckOffline(vehicleWidth, vehicleLength, HeadingResolution, 10);
             OG.resize(Width,Length,figure3);
@@ -121,7 +122,7 @@ namespace fun
         virtual void compute(const VehicleMotionState9d& initial_state) override
         {
             hasValidPlan_ = false;
-            
+
             setStart(initial_state);
             //TO DO: final_state erstellen
             //setEnd(final_state);
