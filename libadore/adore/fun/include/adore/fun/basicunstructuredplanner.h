@@ -105,7 +105,7 @@ namespace fun
             figure5->showAxis();
             figure5->showGrid();
             figure5->show();*/
-            adore::app                               
+            adore::apps::PlotGraphSearch();                               
             Depth = 360 / HeadingResolution;
             cco = new adore::fun::CollisionCheckOffline(vehicleWidth, vehicleLength, HeadingResolution, 10);
             OG.resize(Width,Length,figure3);
@@ -114,9 +114,6 @@ namespace fun
             avg_time = 0.0;
             iteration = 1;
             hasValidPlan_ = false;
-            
-
-
         }
         
         virtual void compute(const VehicleMotionState9d& initial_state) override
