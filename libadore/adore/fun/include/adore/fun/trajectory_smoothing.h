@@ -202,8 +202,8 @@ namespace adore
                 while(improvement > 1e-5) // || iteration>100)
                 {
                     
-                    adore::apps::PlotGraphSearch::optimize(N,og,figure);
-                    
+                    //adore::apps::PlotGraphSearch::optimize(N,og,figure);
+                    optimize(N,og,figure);
                     iteration++; 
                     if(iteration > 150) break;
                 }  
@@ -215,7 +215,7 @@ namespace adore
             }
             private:
             
-            /*void optimize(int N, adore::env::OccupanyGrid* og,DLR_TS::PlotLab::AFigureStub* figure =nullptr)
+            void optimize(int N, adore::env::OccupanyGrid* og,DLR_TS::PlotLab::AFigureStub* figure =nullptr)
             {
                    // createParallelSystems(N,&control);
                     evaluate(N,og,figure);
@@ -224,7 +224,7 @@ namespace adore
                     gradient(N);
                     update_control(N);
                     integrate(N,og,&control,BLUE,figure,false); 
-            }*/
+            }
             void initHorizon(int N, adore::env::OccupanyGrid* og,DLR_TS::PlotLab::AFigureStub* figure =nullptr)
             {
                 obj_F.clear();

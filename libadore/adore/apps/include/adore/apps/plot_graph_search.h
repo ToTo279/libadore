@@ -21,9 +21,32 @@ namespace adore
         private:
             DLR_TS::PlotLab::FigureStubFactory fig_factory;
 
+            /*void evaluate(int N, adore::env::OccupanyGrid* og, DLR_TS::PlotLab::AFigureStub* figure =nullptr)
+            {
+                int n = parallel_control.size();
+                bool plot = false;
+               for(int i=0 ; i<n ; ++i)        
+               {
+                   //plot = false;
+                   //if(i==25) plot = true;
+                integrate(N,og, &parallel_control[i],RED,figure, plot); 
+                obj_F[i] = (states[L].back() );
+               } 
+               /*
+               double s = states[S].back(); 
+               int index = adore::mad::CubicPiecewiseFunction::findIndex(s ,pp_x);
+               double r_psi = adore::mad::CubicPiecewiseFunction::splineEvaluation(index,s,pp_psi);
+               double r_x = adore::mad::CubicPiecewiseFunction::splineEvaluation(index,s,pp_x);
+               double r_y = adore::mad::CubicPiecewiseFunction::splineEvaluation(index,s,pp_y); 
+               double l_dist = -sin(r_psi)* (r_x-states[X].back())+ cos(r_psi)* (r_y-states[Y].back());
+               std::cout<<"\n"<<  r_x <<"\t"<<r_y <<"\t"<<r_psi;
+               std::cout<<"\n"<<  states[X].back() <<"\t"<<states[Y].back() <<"\t"<<s<<"\t"<<l_dist;
+               obj_F[n-1] +=   l_dist;  
+               */           
+                            
+            /*}
 
-
-            /*void initHorizon(int N, adore::env::OccupanyGrid* og,DLR_TS::PlotLab::AFigureStub* figure =nullptr)
+            void initHorizon(int N, adore::env::OccupanyGrid* og,DLR_TS::PlotLab::AFigureStub* figure =nullptr)
             {
                 obj_F.clear();
                 obj_F.resize(N);
@@ -95,7 +118,7 @@ namespace adore
             figure5->show(); 
             }
 
-                        void optimize(int N, adore::env::OccupanyGrid* og,DLR_TS::PlotLab::AFigureStub* figure =nullptr)
+            /*static void optimize(int N, adore::env::OccupanyGrid* og,DLR_TS::PlotLab::AFigureStub* figure =nullptr)
             {
                    // createParallelSystems(N,&control);
                     evaluate(N,og,figure);
@@ -104,7 +127,7 @@ namespace adore
                     gradient(N);
                     update_control(N);
                     integrate(N,og,&control,BLUE,figure,false); 
-            }
+            }*/
     };
 
   }
