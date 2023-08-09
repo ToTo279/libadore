@@ -18,12 +18,12 @@
 #include <adore/fun/node.h>
 #include <adore/fun/search_grid.h>
 #include <adore/fun/hybrid_A_star.h>
-#include <plotlablib/figurestubfactory.h>
+//#include <plotlablib/figurestubfactory.h>
 #include <adore/fun/collision_check_offline.h>
 #include <adore/fun/tac/anominalplanner.h>
 //#include <libadore/libadore/adore/fun/include/adore/fun/tac/anominalplanner.h>
 //#include <adore/fun/vornoi_diagram.h>//
-#include <plotlablib/afigurestub.h>
+//#include <plotlablib/afigurestub.h>
 #include <geometry_msgs/Pose.h>
 //#include <adore/mad/catmull_rom_splines.h>//
 #include <boost/geometry.hpp>
@@ -61,7 +61,11 @@ namespace fun
             /*DLR_TS::PlotLab::FigureStubFactory fig_factory;
             DLR_TS::PlotLab::AFigureStub* figure3;  
             DLR_TS::PlotLab::AFigureStub* figure4; 
-            DLR_TS::PlotLab::AFigureStub* figure5;*/         
+            DLR_TS::PlotLab::AFigureStub* figure5;*/
+
+            typedef adore::apps::PlotGraphSearch TPlotGraphSearch;
+            TPlotGraphSearch* plot_;
+
             std::chrono::system_clock::time_point  startTime;
             std::chrono::system_clock::time_point  endTime;        
             static const int Length = 80; //73;
@@ -105,10 +109,12 @@ namespace fun
             figure5->showAxis();
             figure5->showGrid();
             figure5->show();*/
-            adore::apps::PlotGraphSearch();                               
+
+            plot_->createFigure();
+
             Depth = 360 / HeadingResolution;
             cco = new adore::fun::CollisionCheckOffline(vehicleWidth, vehicleLength, HeadingResolution, 10);
-            OG.resize(Width,Length,figure3);
+            OG.resize(Width,Length,plot_->figure3);
             NH_GRID.resize(Width,Length,Depth);
             h_A_star->setSize(Width,Length);
             avg_time = 0.0;
@@ -133,7 +139,7 @@ namespace fun
                 //time2 = 0.0;
                    
                 //std::cout<<"\n"<<   cco->offlineCollisionTable.size()<<"\t"<<cco->offlineCollisionTable[0].size1()<<"\t"<<cco->offlineCollisionTable[0].size2();   
-                h_A_star->plan(&NH_GRID,&OG, cco, &Start,&End,HeadingResolution,1000, vehicleWidth, vehicleLength ,figure3,figure4,figure5);            
+                h_A_star->plan(&NH_GRID,&OG, cco, &Start,&End,HeadingResolution,1000, vehicleWidth, vehicleLength ,plot_->figure3,plot_->figure4,plot_->figure5);            
                 endTime = std::chrono::system_clock::now(); 
                 iteration++;          
                 
@@ -165,16 +171,23 @@ namespace fun
 
     void setStart(const VehicleMotionState9d& initial_state)
     {
-        validStart = Start.setPosition(initial_state.getX(),initial_state.getY(),initial_state.getPSI(),Width,Length,Depth,adore::mad::CoordinateConversion::DegToRad(HeadingResolution), figure3);
+        validStart = Start.setPosition(initial_state.getX(),initial_state.getY(),initial_state.getPSI(),Width,Length,Depth,adore::mad::CoordinateConversion::DegToRad(HeadingResolution), plot_->figure3);
         //Start.print();
     }  
     void setEnd(const VehicleMotionState9d& final_state)
     {
-        validEnd = End.setPosition(final_state.getX(),final_state.getY(),final_state.getPSI(),Width,Length,Depth, adore::mad::CoordinateConversion::DegToRad(HeadingResolution),  figure3);
+        validEnd = End.setPosition(final_state.getX(),final_state.getY(),final_state.getPSI(),Width,Length,Depth, adore::mad::CoordinateConversion::DegToRad(HeadingResolution),  plot_->figure3);
         //End.print();
     }
 
-    
+    /*void convert()
+    {
+        typedef adore::fun::SetPointRequest TSetPointRequest;
+        TSetPointRequest* setpointrequest_;
+
+        setpointrequest_.append();
+
+    }*/
              
     };
 }

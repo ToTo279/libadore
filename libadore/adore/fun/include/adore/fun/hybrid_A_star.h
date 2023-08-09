@@ -81,11 +81,17 @@ namespace adore
                 while(!heap.empty())
                 {
                     Node<nH_Type,double>* predecessor_node = heap.top();
+                    
+
+
                     if(figure !=nullptr)
                     {                      
                         plot_x.push_back(predecessor_node->x);
                         plot_y.push_back(predecessor_node->y);
                     }
+
+
+                    
                     
                     if(grid->isClosed(predecessor_node,HeadingResolutionRad))
                     {

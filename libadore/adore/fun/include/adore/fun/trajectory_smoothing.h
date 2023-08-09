@@ -19,6 +19,10 @@
 #include <adore/mad/cubicpiecewisefunction.h>
 #include <adore/mad/coordinateconversion.h>
 #include "csaps.h"
+
+//NEW
+#include <adore/apps/plot_graph_search.h>
+
 namespace adore
 {
 	namespace fun
@@ -198,7 +202,7 @@ namespace adore
                 while(improvement > 1e-5) // || iteration>100)
                 {
                     
-                    optimize(N,og,figure);
+                    adore::apps::PlotGraphSearch::optimize(N,og,figure);
                     
                     iteration++; 
                     if(iteration > 150) break;
@@ -210,7 +214,8 @@ namespace adore
                                         
             }
             private:
-            void optimize(int N, adore::env::OccupanyGrid* og,DLR_TS::PlotLab::AFigureStub* figure =nullptr)
+            
+            /*void optimize(int N, adore::env::OccupanyGrid* og,DLR_TS::PlotLab::AFigureStub* figure =nullptr)
             {
                    // createParallelSystems(N,&control);
                     evaluate(N,og,figure);
@@ -219,7 +224,7 @@ namespace adore
                     gradient(N);
                     update_control(N);
                     integrate(N,og,&control,BLUE,figure,false); 
-            }
+            }*/
             void initHorizon(int N, adore::env::OccupanyGrid* og,DLR_TS::PlotLab::AFigureStub* figure =nullptr)
             {
                 obj_F.clear();
@@ -510,7 +515,31 @@ namespace adore
                 }
                 breaks[N-1] = breaks(N-1);
                 adore::mad::CubicPiecewiseFunction::toPolynomialFrom(pp,&breaks[0],&coef1[0],&coef2[0],&coef3[0],&coef4[0],N-1);           
-            }                   
+            }
+
+
+            /*void convertToSPR ()
+            {
+                const adoreMatrix<double,1,0>& T;
+                const adoreMatrix<double,0,0>& X;
+                int N;
+                int maneuverID=0;
+                        /**
+		 * A vehicle state used as reference for the vehicle, containing feedforward control inputs.
+         * [
+         *   pX,
+         *   pY,
+         *   psi,
+         *   vx,
+         *   vy,	at COR
+         *   omega,
+         *   ax,
+         *   delta,
+		 *   dax,
+		 *   ddelta
+         * ]
+         */
+            //}                   
         };
     }
 }
