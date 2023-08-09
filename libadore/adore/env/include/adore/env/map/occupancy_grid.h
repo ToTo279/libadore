@@ -101,7 +101,7 @@ namespace adore
                 obstacle();
                if(figure != nullptr)
                {
-                   PLOT(figure);
+                   adore::apps:PlotGraphSearch::PLOT(figure);
                }
 
 
@@ -135,7 +135,8 @@ namespace adore
 
 
             }
-            void plotSoftRectangle(_Obstacle* obst,DLR_TS::PlotLab::AFigureStub* figure,std::string tag)
+            
+            /*void plotSoftRectangle(_Obstacle* obst,DLR_TS::PlotLab::AFigureStub* figure,std::string tag)
             {
                 std::vector<double> x_v, y_v;
                 double x,y,xt,yt ;
@@ -148,8 +149,11 @@ namespace adore
                     //std::cout<<"\n"<<x<<"\t"<<y;
                 }
                 figure->plot(tag,&x_v[0],&y_v[0],2.5,x_v.size(), GREEN);
-            }
-            void plotEllipse(_Obstacle* obst,DLR_TS::PlotLab::AFigureStub* figure,std::string tag)
+            }*/
+
+
+
+            /*void plotEllipse(_Obstacle* obst,DLR_TS::PlotLab::AFigureStub* figure,std::string tag)
             {
                 std::vector<double> x_v, y_v;
                 double x,y,xt,yt ;
@@ -168,7 +172,7 @@ namespace adore
                //std::cout<<"\n****** "<<obst->vertices_x.size();
                 figure->plot(tag,&obst->vertices_x[0],&obst->vertices_y[0],2.5,obst->vertices_x.size(), GREEN);
 
-            }
+            }*/
             
             double pi;
             double get_ellipse_r(double beta, double length, double width)
@@ -220,7 +224,7 @@ namespace adore
             
             std::string GREEN= "LineColor=0.75,1.,0.75;LineWidth=2";
             std::string RED= "LineColor=0.,0.,0.;LineWidth=3";
-            void PLOT(DLR_TS::PlotLab::AFigureStub* figure)
+            /*void PLOT(DLR_TS::PlotLab::AFigureStub* figure)
             {
                 
                               
@@ -239,7 +243,7 @@ namespace adore
 
                 }
                 
-            }
+            }*/
 
             polygon rotation(_Obstacle* obst,DLR_TS::PlotLab::AFigureStub* figure)
             {

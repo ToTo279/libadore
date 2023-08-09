@@ -128,6 +128,64 @@ namespace adore
                     update_control(N);
                     integrate(N,og,&control,BLUE,figure,false); 
             }*/
+
+
+
+            static void plotSoftRectangle(_Obstacle* obst,DLR_TS::PlotLab::AFigureStub* figure,std::string tag)
+            {
+                std::vector<double> x_v, y_v;
+                double x,y,xt,yt ;
+                for (double beta = 0.0; beta < 2*pi ; beta = beta + 0.1745)
+                {
+                    polar2Cartesian(x, y, get_softRectangle_r (beta, obst->length, obst->width), beta);
+                    transformation(xt, yt,obst->alpha, x, y);
+                    x_v.push_back(obst->x + xt);
+                    y_v.push_back(obst->y + yt);
+                    //std::cout<<"\n"<<x<<"\t"<<y;
+                }
+                figure->plot(tag,&x_v[0],&y_v[0],2.5,x_v.size(), GREEN);
+            }
+
+            static void plotEllipse(_Obstacle* obst,DLR_TS::PlotLab::AFigureStub* figure,std::string tag)
+            {
+                std::vector<double> x_v, y_v;
+                double x,y,xt,yt ;
+                for (double beta = 0.0; beta < 2*pi ; beta = beta + 0.1745)
+                {
+                    polar2Cartesian(x, y, get_ellipse_r (beta, obst->length, obst->width), beta);
+                    transformation(xt, yt,obst->alpha, x, y);
+                    x_v.push_back(obst->x + xt);
+                    y_v.push_back(obst->y + yt);
+                    //std::cout<<"\n"<<x<<"\t"<<y;
+                }
+                figure->plot(tag,&x_v[0],&y_v[0],2.5,x_v.size(), GREEN);
+            }            
+            void plotPolygon(_Obstacle* obst,DLR_TS::PlotLab::AFigureStub* figure,std::string tag)
+            {
+               //std::cout<<"\n****** "<<obst->vertices_x.size();
+                figure->plot(tag,&obst->vertices_x[0],&obst->vertices_y[0],2.5,obst->vertices_x.size(), GREEN);
+
+            }
+            void PLOT(DLR_TS::PlotLab::AFigureStub* figure)
+            {
+                
+                              
+                std::stringstream ss;
+                for (int r=0; r<Grid.rows(); ++r)
+                {                    
+                    for(int c=0; c<Grid.cols(); ++c)
+                    {
+                        ss.clear();
+                        ss.str("");
+                        ss << "f"<<r*Grid.cols()+c;
+                        if(Grid(r,c)) PLOT::plotPosition(ss.str(),c,r,figure,RED,0.05);
+                        //std::cout<<"\n"<<r<<"\t"<<c<<"\t"<<r*Grid.cols()+c;
+                        else PLOT::plotPosition(ss.str(),c,r,figure,GREEN,0.05);
+                    }
+
+                }
+                
+            }
     };
 
   }
