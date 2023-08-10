@@ -212,7 +212,7 @@ namespace adore
             private:
             //typedef adore::apps::PlotGraphSearch TPlotGraphSearch;
             //TPlotGraphSearch plot_;
-            adore::apps::PlotGraphSearch plot_;
+            //adore::apps::PlotGraphSearch plot_;
 
             /*void polar2Cartesian(double &x, double &y, double r, double beta)
             {
@@ -241,7 +241,7 @@ namespace adore
             
             std::string GREEN= "LineColor=0.75,1.,0.75;LineWidth=2";
             std::string RED= "LineColor=0.,0.,0.;LineWidth=3";
-            /*void PLOT(DLR_TS::PlotLab::AFigureStub* figure)
+            void PLOT(DLR_TS::PlotLab::AFigureStub* figure)
             {
                 
                               
@@ -260,7 +260,7 @@ namespace adore
 
                 }
                 
-            }*/
+            }
 
             polygon rotation(_Obstacle* obst,DLR_TS::PlotLab::AFigureStub* figure)
             {

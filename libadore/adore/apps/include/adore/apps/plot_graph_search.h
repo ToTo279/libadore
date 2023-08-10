@@ -51,7 +51,7 @@ namespace adore
 
             typedef bg::model::point<double,2,bg::cs::cartesian> Point;
             typedef bg::model::box<Point> box;
-            polygon rectangularBox;
+            /*polygon rectangularBox;
             struct circle
             {
                 double x, y, r;
@@ -67,11 +67,11 @@ namespace adore
                 std::vector<circle> circles;
                 polygon poly;
                 int ID;
-            };
+            };*/
 
-            Eigen::MatrixXd Grid; 
-            typedef boost::container::vector<_Obstacle> obstacleList;
-            obstacleList obstacles;
+            //Eigen::MatrixXd Grid; 
+            //typedef boost::container::vector<_Obstacle> obstacleList;
+            //obstacleList obstacles;
             
             
 
@@ -106,7 +106,7 @@ namespace adore
 
 
 
-            void plotSoftRectangle(_Obstacle* obst,DLR_TS::PlotLab::AFigureStub* figure,std::string tag)
+            void plotSoftRectangle(adore::env::OccupanyGrid::_Obstacle* obst,DLR_TS::PlotLab::AFigureStub* figure,std::string tag)
             {
                 std::vector<double> x_v, y_v;
                 double x,y,xt,yt ;
@@ -121,7 +121,7 @@ namespace adore
                 figure->plot(tag,&x_v[0],&y_v[0],2.5,x_v.size(), GREEN);
             }
 
-            void plotEllipse(_Obstacle* obst,DLR_TS::PlotLab::AFigureStub* figure,std::string tag)
+            void plotEllipse(adore::env::OccupanyGrid::_Obstacle* obst,DLR_TS::PlotLab::AFigureStub* figure,std::string tag)
             {
                 std::vector<double> x_v, y_v;
                 double x,y,xt,yt ;
@@ -135,7 +135,7 @@ namespace adore
                 }
                 figure->plot(tag,&x_v[0],&y_v[0],2.5,x_v.size(), GREEN);
             }            
-            void plotPolygon(_Obstacle* obst,DLR_TS::PlotLab::AFigureStub* figure,std::string tag)
+            void plotPolygon(adore::env::OccupanyGrid::_Obstacle* obst,DLR_TS::PlotLab::AFigureStub* figure,std::string tag)
             {
                //std::cout<<"\n****** "<<obst->vertices_x.size();
                 figure->plot(tag,&obst->vertices_x[0],&obst->vertices_y[0],2.5,obst->vertices_x.size(), GREEN);
@@ -146,14 +146,14 @@ namespace adore
                 
                               
                 std::stringstream ss;
-                for (int r=0; r<Grid.rows(); ++r)
+                for (int r=0; r<occupany_grid.Grid.rows(); ++r)
                 {                    
-                    for(int c=0; c<Grid.cols(); ++c)
+                    for(int c=0; c<occupany_grid.Grid.cols(); ++c)
                     {
                         ss.clear();
                         ss.str("");
-                        ss << "f"<<r*Grid.cols()+c;
-                        if(Grid(r,c)) PLOT::plotPosition(ss.str(),c,r,figure,RED,0.05);
+                        ss << "f"<<r*occupany_grid.Grid.cols()+c;
+                        if(occupany_grid.Grid(r,c)) PLOT::plotPosition(ss.str(),c,r,figure,RED,0.05);
                         //std::cout<<"\n"<<r<<"\t"<<c<<"\t"<<r*Grid.cols()+c;
                         else PLOT::plotPosition(ss.str(),c,r,figure,GREEN,0.05);
                     }

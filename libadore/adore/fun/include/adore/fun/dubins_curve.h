@@ -315,7 +315,8 @@ namespace adore
                 }
                 if(isCollisionFree) 
                 {
-                    adore::apps::PlotGraphSearch::plot_dubin(figure);
+                    //adore::apps::PlotGraphSearch::plot_dubin(figure);
+                    plot_dubin(figure);
                 }
             }
             optPath = path[optIndex];
@@ -354,7 +355,7 @@ namespace adore
             }
             std::cout<<"\n";
         }   
-        /*void plot_dubin(DLR_TS::PlotLab::AFigureStub* figure)
+        void plot_dubin(DLR_TS::PlotLab::AFigureStub* figure)
         {
             int size = path [optIndex].curve.size();
             std::vector<double> x, y, psi;
@@ -369,7 +370,7 @@ namespace adore
                 psi.push_back(path [optIndex].curve[i].psi);
             }
              figure->plot("#d_c",x.data(),y.data(), 1.2, size, color[1]);                   
-        } */    
+        }     
 
              
 

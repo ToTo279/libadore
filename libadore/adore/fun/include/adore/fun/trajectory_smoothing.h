@@ -33,6 +33,8 @@ namespace adore
        	class TrajectorySmoothing
 		{
             private:
+            adore::apps::PlotGraphSearch plot;
+
             double pi;
             env::OccupanyGrid::obstacleList obstacles;
             enum STATES {X , Y, PSI,  S, L} ;
@@ -108,7 +110,8 @@ namespace adore
                     poly << "obstPoly"<<i;
                     s_rect<< "obst_s_rect"<<i;
                     s_ellipse<< "obst_s_ellipse"<<i;
-                    og->adore::apps::PlotGraphSearch::plotPolygon(&obstacles[i],figure,poly.str());
+                    //og->plotPolygon(&obstacles[i],figure,poly.str());
+                    plot.plotPolygon(&obstacles[i],figure,poly.str());
                     //og->plotSoftRectangle(&obstacles[i],figure,s_rect.str());
                     //og->plotEllipse(&obstacles[i],figure,s_ellipse.str());
                     og->calculateCircles(&obstacles[i],figure);
