@@ -14,6 +14,7 @@
 #pragma once
 
 //NEW
+//#include <adore/env/map/occupancy_grid.h>
 //#include <adore/apps/plot_graph_search.h>
 
 #include <adore/env/map/occupancy_grid.h>
@@ -45,6 +46,7 @@
 //#include "Vector3.h"
 //#include "Quaternion.h"
 //#include <Matrix3x3.h>
+//#include <adore/fun/dubins_curve.h>
 #include <adore/apps/plot_graph_search.h>
 
 

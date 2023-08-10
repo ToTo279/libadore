@@ -20,6 +20,7 @@
 
 //#include <adore/fun/node.h>
 //#include <adore/env/map/occupancy_grid.h>
+//#include <adore/fun/dubins_curve.h>
 
 namespace adore
 {
@@ -126,7 +127,7 @@ namespace adore
                 double x,y,xt,yt ;
                 for (double beta = 0.0; beta < 2*pi ; beta = beta + 0.1745)
                 {
-                    occupany_grid.polar2Cartesian(x, y, get_ellipse_r (beta, obst->length, obst->width), beta);
+                    occupany_grid.polar2Cartesian(x, y, occupany_grid.get_ellipse_r (beta, obst->length, obst->width), beta);
                     occupany_grid.transformation(xt, yt,obst->alpha, x, y);
                     x_v.push_back(obst->x + xt);
                     y_v.push_back(obst->y + yt);
@@ -161,9 +162,9 @@ namespace adore
                 
             }
 
-            void plot_dubin(DLR_TS::PlotLab::AFigureStub* figure)
+            /*void plot_dubin(DLR_TS::PlotLab::AFigureStub* figure)
             {
-                int size = path [optIndex].curve.size();
+                int size = adore::fun::DubinsCurve::path [optIndex].curve.size();
                 std::vector<double> x, y, psi;
                 for (int i=0; i< size; ++i)
                 {
@@ -176,7 +177,7 @@ namespace adore
                     psi.push_back(path [optIndex].curve[i].psi);
                 }
                 figure->plot("#d_c",x.data(),y.data(), 1.2, size, color[1]);                   
-            }
+            }*/
     };
 
   }

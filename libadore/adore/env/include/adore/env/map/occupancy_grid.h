@@ -107,8 +107,9 @@ namespace adore
                 obstacle();
                if(figure != nullptr)
                {
+                   PLOT(figure);
                    //plot_->PLOT(figure);
-                   adore::apps::PlotGraphSearch::PLOT(figure);
+                   //adore::apps::PlotGraphSearch::PLOT(figure);
                }
 
 
@@ -209,8 +210,9 @@ namespace adore
                 y = r* sin(beta);
             }            
             private:
-            typedef adore::apps::PlotGraphSearch TPlotGraphSearch;
-            TPlotGraphSearch plot_;
+            //typedef adore::apps::PlotGraphSearch TPlotGraphSearch;
+            //TPlotGraphSearch plot_;
+            adore::apps::PlotGraphSearch plot_;
 
             /*void polar2Cartesian(double &x, double &y, double r, double beta)
             {
