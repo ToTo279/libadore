@@ -42,7 +42,7 @@
 //#include "Vector3.h"
 //#include "Quaternion.h"
 //#include <Matrix3x3.h>
-//#include <adore/apps/graph_search.h>
+#include <adore/apps/plot_graph_search.h>
 
 
 namespace adore

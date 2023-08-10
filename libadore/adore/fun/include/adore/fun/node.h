@@ -20,7 +20,8 @@
 #include <adore/mad/coordinateconversion.h>
 #include <adore/mad/arraymatrixtools.h>
 
-
+//NEW
+#include <adore/env/map/occupancy_grid.h>
 
 namespace adore
 {

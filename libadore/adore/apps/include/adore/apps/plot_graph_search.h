@@ -1,4 +1,11 @@
+#pragma once
+#include <plotlablib/afigurestub.h>
+#include <plotlablib/figurestubfactory.h>
+#include <adore/apps/if_plotlab/plot_shape.h>
+#include <boost/container/vector.hpp>
 
+#include <boost/geometry.hpp>
+#include <eigen3/Eigen/Dense>
 
 #include <plotlablib/figurestubfactory.h>
 #include <plotlablib/afigurestub.h>
@@ -92,9 +99,22 @@ namespace adore
             DLR_TS::PlotLab::AFigureStub* figure4; 
             DLR_TS::PlotLab::AFigureStub* figure5;
 
+            struct _Obstacle
+            {
+                double x;
+                double y;
+                double width;
+                double length;
+                double alpha;
+                std::vector<double> vertices_x,vertices_y;
+                std::vector<circle> circles;
+                polygon poly;
+                int ID;
+            };
+
             PlotGraphSearch()
             {
-
+              pi = 3.141592653589793;
             }
 
             ~PlotGraphSearch()
@@ -131,7 +151,7 @@ namespace adore
 
 
 
-            static void plotSoftRectangle(_Obstacle* obst,DLR_TS::PlotLab::AFigureStub* figure,std::string tag)
+            void plotSoftRectangle(_Obstacle* obst,DLR_TS::PlotLab::AFigureStub* figure,std::string tag)
             {
                 std::vector<double> x_v, y_v;
                 double x,y,xt,yt ;
@@ -146,7 +166,7 @@ namespace adore
                 figure->plot(tag,&x_v[0],&y_v[0],2.5,x_v.size(), GREEN);
             }
 
-            static void plotEllipse(_Obstacle* obst,DLR_TS::PlotLab::AFigureStub* figure,std::string tag)
+            void plotEllipse(_Obstacle* obst,DLR_TS::PlotLab::AFigureStub* figure,std::string tag)
             {
                 std::vector<double> x_v, y_v;
                 double x,y,xt,yt ;
@@ -166,7 +186,7 @@ namespace adore
                 figure->plot(tag,&obst->vertices_x[0],&obst->vertices_y[0],2.5,obst->vertices_x.size(), GREEN);
 
             }
-            void PLOT(DLR_TS::PlotLab::AFigureStub* figure)
+            static void PLOT(DLR_TS::PlotLab::AFigureStub* figure)
             {
                 
                               

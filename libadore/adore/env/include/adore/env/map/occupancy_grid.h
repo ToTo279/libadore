@@ -21,6 +21,10 @@
 #include <boost/geometry.hpp>
 #include <eigen3/Eigen/Dense>
 
+//NEW
+//#include <adore/fun/basicunstructuredplanner.h>
+#include <adore/apps/plot_graph_search.h>
+
 //#include <adore/fun
 namespace adore
 {
@@ -62,6 +66,9 @@ namespace adore
             typedef boost::container::vector<_Obstacle> obstacleList;
             obstacleList obstacles;
             
+            typedef adore::apps::PlotGraphSearch TPlotGraphSearch;
+            TPlotGraphSearch plot_;
+
             OccupanyGrid()
             {
                 pi = 3.141592653589793;
@@ -101,7 +108,8 @@ namespace adore
                 obstacle();
                if(figure != nullptr)
                {
-                   adore::apps:PlotGraphSearch::PLOT(figure);
+                   //plot_->PLOT(figure);
+                   adore::apps::PlotGraphSearch::PLOT(figure);
                }
 
 
