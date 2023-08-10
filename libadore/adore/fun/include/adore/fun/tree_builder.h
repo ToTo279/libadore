@@ -18,8 +18,9 @@
 
 //NEW
 #include <adore/apps/plot_graph_search.h>
-#include <adore/env/map/occupancy_grid.h>
+
 #include <adore/fun/node.h>
+//#include <adore/env/map/occupancy_grid.h>
 
 namespace adore
 {

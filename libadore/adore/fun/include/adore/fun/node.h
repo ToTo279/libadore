@@ -21,7 +21,7 @@
 #include <adore/mad/arraymatrixtools.h>
 
 //NEW
-#include <adore/env/map/occupancy_grid.h>
+//#include <adore/env/map/occupancy_grid.h>
 
 namespace adore
 {
@@ -35,6 +35,9 @@ namespace adore
        	class Node
 		{
 		private:
+        //typedef adore::env::OccupanyGrid TOccupanyGrid;
+        //TUnstructuredPlanner* basicunstructuredplanner_;
+
         std::string RED= "LineColor=1.,0.,0.;LineWidth=3";
         static const int N_suc = 3;
         // H := Holonomic,   nH := non Holonomic
@@ -178,6 +181,7 @@ namespace adore
         }
 
         std::vector<Node< 2,  int>*>  updateSuccessors2D(adore::env::OccupanyGrid* og)
+        //std::vector<Node< 2,  int>*>  updateSuccessors2D(TOccupanyGrid* og)
         {
             
                 int gridWidth = og->Grid.rows();

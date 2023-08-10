@@ -18,87 +18,43 @@
 #include <adore/mad/coordinateconversion.h>
 #include "csaps.h"
 
+//#include <adore/fun/node.h>
+//#include <adore/env/map/occupancy_grid.h>
+
 namespace adore
 {
   namespace apps
   {
 
+    namespace bg = boost::geometry; 
+    namespace bgm = bg::model;
+    using point_xy = bgm::d2::point_xy<double>; 
+    using polygon = bgm::polygon<point_xy>;
+
     class PlotGraphSearch
     {
         private:
+            //typedef adore::env::OccupanyGrid TOccupanyGrid;
+            //TOccupanyGrid* occupany_grid;
+            adore::env::OccupanyGrid occupany_grid;
+            
             DLR_TS::PlotLab::FigureStubFactory fig_factory;
-
-            /*void evaluate(int N, adore::env::OccupanyGrid* og, DLR_TS::PlotLab::AFigureStub* figure =nullptr)
-            {
-                int n = parallel_control.size();
-                bool plot = false;
-               for(int i=0 ; i<n ; ++i)        
-               {
-                   //plot = false;
-                   //if(i==25) plot = true;
-                integrate(N,og, &parallel_control[i],RED,figure, plot); 
-                obj_F[i] = (states[L].back() );
-               } 
-               /*
-               double s = states[S].back(); 
-               int index = adore::mad::CubicPiecewiseFunction::findIndex(s ,pp_x);
-               double r_psi = adore::mad::CubicPiecewiseFunction::splineEvaluation(index,s,pp_psi);
-               double r_x = adore::mad::CubicPiecewiseFunction::splineEvaluation(index,s,pp_x);
-               double r_y = adore::mad::CubicPiecewiseFunction::splineEvaluation(index,s,pp_y); 
-               double l_dist = -sin(r_psi)* (r_x-states[X].back())+ cos(r_psi)* (r_y-states[Y].back());
-               std::cout<<"\n"<<  r_x <<"\t"<<r_y <<"\t"<<r_psi;
-               std::cout<<"\n"<<  states[X].back() <<"\t"<<states[Y].back() <<"\t"<<s<<"\t"<<l_dist;
-               obj_F[n-1] +=   l_dist;  
-               */           
-                            
-            /*}
-
-            void initHorizon(int N, adore::env::OccupanyGrid* og,DLR_TS::PlotLab::AFigureStub* figure =nullptr)
-            {
-                obj_F.clear();
-                obj_F.resize(N);
-                d_obj_F.clear();
-                d_obj_F.resize(N);
-                parallel_control.clear();
-                parallel_control.resize(N);
-                control_back.clear();
-                control_back.resize(N);
-                control.clear();
-                states[X].clear();
-                states[Y].clear();
-                states[PSI].clear();
-                states[S].clear();
-                states[L].clear();
-                states[X].push_back(pre_trajectory[0].x);
-                states[Y].push_back(pre_trajectory[0].y);
-                states[PSI].push_back(pre_trajectory[0].psi);
-                states[S].push_back(0.0);
-                states[L].push_back(0.0); 
-                double tmp_x[nX], x[nX];
-                for(int i=0; i<nX; ++i) tmp_x[i] = states[i][0];
-               // std::memcpy(&tmp_x[0],&x[0],nX*sizeof(double));                
-                for(int i=0; i<N; ++i)        
-                {
-                    double s = states[S].back();
-                    int index = adore::mad::CubicPiecewiseFunction::findIndex(s,pp_d);
-                    double input = adore::mad::CubicPiecewiseFunction::splineEvaluation(index,s,pp_d);
-                    control.push_back(input);
-                    ralston(og, &tmp_x[0],input,&x[0],dt);
-                    for(int j=0; j<nX; ++j) {states[j].push_back(x[j]);}
-                    std::memcpy(&tmp_x[0],&x[0],nX*sizeof(double)); 
-                }  
-                
-               // std::cout<<"\n"<<states[Y].size();                           
-
-                
-
-            }*/
+            double pi;
+            std::string GREEN= "LineColor=0.75,1.,0.75;LineWidth=2";
+            std::string RED= "LineColor=0.,0.,0.;LineWidth=3";
         
         public:
             DLR_TS::PlotLab::AFigureStub* figure3;  
             DLR_TS::PlotLab::AFigureStub* figure4; 
             DLR_TS::PlotLab::AFigureStub* figure5;
 
+            typedef bg::model::point<double,2,bg::cs::cartesian> Point;
+            typedef bg::model::box<Point> box;
+            polygon rectangularBox;
+            struct circle
+            {
+                double x, y, r;
+            };            
             struct _Obstacle
             {
                 double x;
@@ -111,6 +67,15 @@ namespace adore
                 polygon poly;
                 int ID;
             };
+
+            Eigen::MatrixXd Grid; 
+            typedef boost::container::vector<_Obstacle> obstacleList;
+            obstacleList obstacles;
+            
+            
+
+
+
 
             PlotGraphSearch()
             {
@@ -138,17 +103,6 @@ namespace adore
             figure5->show(); 
             }
 
-            /*static void optimize(int N, adore::env::OccupanyGrid* og,DLR_TS::PlotLab::AFigureStub* figure =nullptr)
-            {
-                   // createParallelSystems(N,&control);
-                    evaluate(N,og,figure);
-                    addEpsilon();
-                    evaluate(N,og,figure);
-                    gradient(N);
-                    update_control(N);
-                    integrate(N,og,&control,BLUE,figure,false); 
-            }*/
-
 
 
             void plotSoftRectangle(_Obstacle* obst,DLR_TS::PlotLab::AFigureStub* figure,std::string tag)
@@ -157,8 +111,8 @@ namespace adore
                 double x,y,xt,yt ;
                 for (double beta = 0.0; beta < 2*pi ; beta = beta + 0.1745)
                 {
-                    polar2Cartesian(x, y, get_softRectangle_r (beta, obst->length, obst->width), beta);
-                    transformation(xt, yt,obst->alpha, x, y);
+                    occupany_grid.polar2Cartesian(x, y, occupany_grid.get_softRectangle_r (beta, obst->length, obst->width), beta);
+                    occupany_grid.transformation(xt, yt,obst->alpha, x, y);
                     x_v.push_back(obst->x + xt);
                     y_v.push_back(obst->y + yt);
                     //std::cout<<"\n"<<x<<"\t"<<y;
@@ -172,8 +126,8 @@ namespace adore
                 double x,y,xt,yt ;
                 for (double beta = 0.0; beta < 2*pi ; beta = beta + 0.1745)
                 {
-                    polar2Cartesian(x, y, get_ellipse_r (beta, obst->length, obst->width), beta);
-                    transformation(xt, yt,obst->alpha, x, y);
+                    occupany_grid.polar2Cartesian(x, y, get_ellipse_r (beta, obst->length, obst->width), beta);
+                    occupany_grid.transformation(xt, yt,obst->alpha, x, y);
                     x_v.push_back(obst->x + xt);
                     y_v.push_back(obst->y + yt);
                     //std::cout<<"\n"<<x<<"\t"<<y;
@@ -186,7 +140,7 @@ namespace adore
                 figure->plot(tag,&obst->vertices_x[0],&obst->vertices_y[0],2.5,obst->vertices_x.size(), GREEN);
 
             }
-            static void PLOT(DLR_TS::PlotLab::AFigureStub* figure)
+            void PLOT(DLR_TS::PlotLab::AFigureStub* figure)
             {
                 
                               
@@ -205,6 +159,23 @@ namespace adore
 
                 }
                 
+            }
+
+            void plot_dubin(DLR_TS::PlotLab::AFigureStub* figure)
+            {
+                int size = path [optIndex].curve.size();
+                std::vector<double> x, y, psi;
+                for (int i=0; i< size; ++i)
+                {
+                    std::stringstream ss;
+                    ss.str("");
+                    ss << "fff"<<i*2;  
+                    PLOT::plotRectangle(ss.str(), path [optIndex].curve[i].x, path [optIndex].curve[i].y, 2.0, 2.0, figure, GRAY, path [optIndex].curve[i].psi);                
+                    x.push_back(path [optIndex].curve[i].x);
+                    y.push_back(path [optIndex].curve[i].y);
+                    psi.push_back(path [optIndex].curve[i].psi);
+                }
+                figure->plot("#d_c",x.data(),y.data(), 1.2, size, color[1]);                   
             }
     };
 

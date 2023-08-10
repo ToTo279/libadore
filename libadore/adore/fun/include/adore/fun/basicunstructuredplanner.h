@@ -13,6 +13,9 @@
  ********************************************************************************/
 #pragma once
 
+//NEW
+//#include <adore/apps/plot_graph_search.h>
+
 #include <adore/env/map/occupancy_grid.h>
 #include <eigen3/Eigen/Core>
 #include <adore/fun/node.h>

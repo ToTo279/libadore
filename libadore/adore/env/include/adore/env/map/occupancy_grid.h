@@ -23,7 +23,8 @@
 
 //NEW
 //#include <adore/fun/basicunstructuredplanner.h>
-#include <adore/apps/plot_graph_search.h>
+//#include <adore/apps/plot_graph_search.h>
+//#include <adore/fun/node.h>
 
 //#include <adore/fun
 namespace adore
@@ -66,8 +67,6 @@ namespace adore
             typedef boost::container::vector<_Obstacle> obstacleList;
             obstacleList obstacles;
             
-            typedef adore::apps::PlotGraphSearch TPlotGraphSearch;
-            TPlotGraphSearch plot_;
 
             OccupanyGrid()
             {
@@ -203,13 +202,21 @@ namespace adore
             {
                 x = x_o  *cos(theta) - y_o  * sin(theta) ;
                 y = x_o  *sin(theta) + y_o  * cos(theta) ;
-            }            
-            private:
+            }
             void polar2Cartesian(double &x, double &y, double r, double beta)
             {
                 x = r* cos(beta);
                 y = r* sin(beta);
-            }
+            }            
+            private:
+            typedef adore::apps::PlotGraphSearch TPlotGraphSearch;
+            TPlotGraphSearch plot_;
+
+            /*void polar2Cartesian(double &x, double &y, double r, double beta)
+            {
+                x = r* cos(beta);
+                y = r* sin(beta);
+            }*/
 
             void obstacle ()
             {
