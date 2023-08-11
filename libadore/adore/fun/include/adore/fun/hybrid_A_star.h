@@ -62,7 +62,7 @@ namespace adore
             {
                 H_GRID.resize(Width, Length);
             }
-            void plan(GRID<Node<nH_Type,double>>* grid,adore::env::OccupanyGrid* og, adore::fun::CollisionCheckOffline* cco,Node<nH_Type,double>* Start, Node<nH_Type,double>* End,int  HeadingResolution, int MAX_ITERATION , double vehicleWidth, double vehicleLength, DLR_TS::PlotLab::AFigureStub* figure =nullptr, DLR_TS::PlotLab::AFigureStub* figure1 =nullptr, DLR_TS::PlotLab::AFigureStub* figure2 =nullptr)
+            bool plan(GRID<Node<nH_Type,double>>* grid,adore::env::OccupanyGrid* og, adore::fun::CollisionCheckOffline* cco,Node<nH_Type,double>* Start, Node<nH_Type,double>* End,int  HeadingResolution, int MAX_ITERATION , double vehicleWidth, double vehicleLength, DLR_TS::PlotLab::AFigureStub* figure =nullptr, DLR_TS::PlotLab::AFigureStub* figure1 =nullptr, DLR_TS::PlotLab::AFigureStub* figure2 =nullptr)
             {   
                 Tree.init();
                 iteration = 0;   
@@ -107,7 +107,7 @@ namespace adore
                             Tree.push_p(predecessor_node);
                             Tree.build(Start,End,vehicleWidth, vehicleLength, figure);                            
                             std::cout<<"\nEnd is reached";
-                            return;
+                            return false;
                         } //end is reached, or max iteration
                         if(predecessor_node->isCloseTo(End,50.0))
                         {
@@ -118,7 +118,7 @@ namespace adore
                             Tree.build(Start,predecessor_node,vehicleWidth, vehicleLength, figure); 
                             smoothing->get_pre_trajectory(og, &Tree.tree, &dubins.optPath.curve, vehicleWidth, vehicleLength, figure1,figure2);
 
-                                return;
+                                return true;
                             }                           
                         }//close to end
                         evaluateSuccessors(predecessor_node,grid,&H_GRID,og,cco,End,&heap,HeadingResolutionRad);
@@ -128,6 +128,7 @@ namespace adore
                 }
                 std::cout<<"\nGOAL IS UNREACHABLE";
                 iteration++;
+                return false;
 
             }
             private:

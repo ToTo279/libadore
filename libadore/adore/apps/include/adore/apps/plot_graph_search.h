@@ -39,18 +39,42 @@ namespace adore
             //TOccupanyGrid* occupany_grid;
             adore::env::OccupanyGrid occupany_grid;
             
-            DLR_TS::PlotLab::FigureStubFactory fig_factory;
+            //DLR_TS::PlotLab::FigureStubFactory fig_factory;
             double pi;
             std::string GREEN= "LineColor=0.75,1.,0.75;LineWidth=2";
             std::string RED= "LineColor=0.,0.,0.;LineWidth=3";
-        
-        public:
+
+            DLR_TS::PlotLab::FigureStubFactory* fig_factory_;
+            /*DLR_TS::PlotLab::AFigureStub* figure_lon1_;
+            DLR_TS::PlotLab::AFigureStub* figure_lon2_;
+            DLR_TS::PlotLab::AFigureStub* figure_lat1_;
+            DLR_TS::PlotLab::AFigureStub* figure_lat2_;*/
             DLR_TS::PlotLab::AFigureStub* figure3;  
             DLR_TS::PlotLab::AFigureStub* figure4; 
             DLR_TS::PlotLab::AFigureStub* figure5;
+            adore::mad::AFeed<adore::fun::PlanningResult>* planning_result_feed_;
+        
+        public:
 
             typedef bg::model::point<double,2,bg::cs::cartesian> Point;
             typedef bg::model::box<Point> box;
+
+            void initialize_plot()
+            {
+                fig_factory_ = new DLR_TS::PlotLab::FigureStubFactory();
+                figure3 = fig_factory.createFigureStub(3);
+                figure3->showAxis();
+                figure3->showGrid();
+                figure3->show();  
+                figure4 = fig_factory.createFigureStub(4);
+                figure4->showAxis();
+                figure4->showGrid();
+                figure4->show();   
+                figure5 = fig_factory.createFigureStub(5);
+                figure5->showAxis();
+                figure5->showGrid();
+                figure5->show();
+            }
             /*polygon rectangularBox;
             struct circle
             {
@@ -88,7 +112,7 @@ namespace adore
 
             }
 
-            void createFigure()
+            /*void createFigure()
             {
             figure3 = fig_factory.createFigureStub(3);
             figure3->showAxis();
@@ -102,7 +126,7 @@ namespace adore
             figure5->showAxis();
             figure5->showGrid();
             figure5->show(); 
-            }
+            }*/
 
 
 
@@ -178,6 +202,15 @@ namespace adore
                 }
                 figure->plot("#d_c",x.data(),y.data(), 1.2, size, color[1]);                   
             }*/
+
+            void run()
+            {
+                fun::PlanningResult latest_planning_result;
+                if (planning_result_feed_->hasNext())
+                {
+                    
+                }
+            }
     };
 
   }

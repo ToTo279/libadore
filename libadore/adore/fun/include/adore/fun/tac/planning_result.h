@@ -72,7 +72,8 @@ namespace adore
             int maneuver_type;                                          /**< */
             static const int COLLISION_MITIGATION = 0;                  /**< */
             static const int EMERGENCY_BREAKING = 1;                    /**< */
-            static const int NOMINAL_DRIVING = 2;                       /**< */
+            static const int NOMINAL_DRIVING = 2;
+            static const int UNSTRUCTURED = 3;                         /**< */
             bool indicator_left;
             bool indicator_right;
             PlanningResult()

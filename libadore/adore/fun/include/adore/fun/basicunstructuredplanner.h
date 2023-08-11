@@ -144,7 +144,7 @@ namespace fun
                 //time2 = 0.0;
                    
                 //std::cout<<"\n"<<   cco->offlineCollisionTable.size()<<"\t"<<cco->offlineCollisionTable[0].size1()<<"\t"<<cco->offlineCollisionTable[0].size2();   
-                h_A_star->plan(&NH_GRID,&OG, cco, &Start,&End,HeadingResolution,1000, vehicleWidth, vehicleLength ,plot_->figure3,plot_->figure4,plot_->figure5);            
+                hasValidPlan_ = h_A_star->plan(&NH_GRID,&OG, cco, &Start,&End,HeadingResolution,1000, vehicleWidth, vehicleLength ,plot_->figure3,plot_->figure4,plot_->figure5);            
                 endTime = std::chrono::system_clock::now(); 
                 iteration++;          
                 
@@ -183,16 +183,8 @@ namespace fun
     {
         validEnd = End.setPosition(final_state.getX(),final_state.getY(),final_state.getPSI(),Width,Length,Depth, adore::mad::CoordinateConversion::DegToRad(HeadingResolution),  plot_->figure3);
         //End.print();
-    }
-
-    /*void convert()
-    {
-        typedef adore::fun::SetPointRequest TSetPointRequest;
-        TSetPointRequest* setpointrequest_;
-
-        setpointrequest_.append();
-
-    }*/
+    }                
+        
              
     };
 }

@@ -241,6 +241,7 @@ namespace adore
             
             std::string GREEN= "LineColor=0.75,1.,0.75;LineWidth=2";
             std::string RED= "LineColor=0.,0.,0.;LineWidth=3";
+            /*TO DO
             void PLOT(DLR_TS::PlotLab::AFigureStub* figure)
             {
                 
@@ -260,7 +261,7 @@ namespace adore
 
                 }
                 
-            }
+            }*/
 
             polygon rotation(_Obstacle* obst,DLR_TS::PlotLab::AFigureStub* figure)
             {
