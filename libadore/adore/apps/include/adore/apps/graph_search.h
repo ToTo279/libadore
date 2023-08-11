@@ -141,7 +141,7 @@ namespace adore
             //document planner result
             planning_result.id = id_; // in lfbehavior, there is only one maneuver
             planning_result.name = plannerName_;
-            planning_result.maneuver_type = adore::fun::PlanningResult::NOMINAL_DRIVING;
+            planning_result.maneuver_type = adore::fun::PlanningResult::UNSTRUCTURED;
             planning_result.iteration = planning_request.iteration;
             planning_result.nominal_maneuver_valid = false;
             planning_result.combined_maneuver_valid = false;
