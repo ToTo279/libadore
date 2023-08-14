@@ -178,6 +178,11 @@ namespace adore
                 return std::max(dubinsPathLength,nonHolonomicPath);
             }
 
+            std::vector<int>* getOccupancyGrid()
+            {
+                return &occupancies_x;
+            }
+
 
         };
     }

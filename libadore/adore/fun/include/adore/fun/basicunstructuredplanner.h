@@ -96,6 +96,8 @@ namespace fun
 
         
         public:
+        ros::Publisher occupancies_publisher_;
+
         BasicUnstructuredPlanner()
         {
             vehicleLength = 3.2;
@@ -184,7 +186,11 @@ namespace fun
         validEnd = End.setPosition(final_state.getX(),final_state.getY(),final_state.getPSI(),Width,Length,Depth, adore::mad::CoordinateConversion::DegToRad(HeadingResolution),  plot_->figure3);
         //End.print();
     }                
-        
+
+    void send()
+    {
+
+    }    
              
     };
 }

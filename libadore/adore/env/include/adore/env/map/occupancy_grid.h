@@ -105,12 +105,15 @@ namespace adore
 
 
                 obstacle();
-               if(figure != nullptr)
+                // WIEDER ENTKOMMENTIEREN
+
+
+               /*if(figure != nullptr)
                {
                    PLOT(figure);
                    //plot_->PLOT(figure);
                    //adore::apps::PlotGraphSearch::PLOT(figure);
-               }
+               }*/
 
 
                               
@@ -213,6 +216,28 @@ namespace adore
             //typedef adore::apps::PlotGraphSearch TPlotGraphSearch;
             //TPlotGraphSearch plot_;
             //adore::apps::PlotGraphSearch plot_;
+
+            std::vector<int> occupancies_x;
+            std::vector<int> occupancies_y;
+
+            void occ ()
+            {
+                for (int r=0; r<Grid.rows(); ++r)
+                {                    
+                    for(int c=0; c<Grid.cols(); ++c)
+                    {
+                        
+                        occupancies_x.push_back(Grid(r,c));
+                          
+
+                    }
+                }
+            }
+
+            std::vector<int>* getOccupancies()
+            {
+                return &occupancies_x;
+            }
 
             /*void polar2Cartesian(double &x, double &y, double r, double beta)
             {
