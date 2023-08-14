@@ -96,8 +96,6 @@ namespace fun
 
         
         public:
-        ros::Publisher occupancies_publisher_;
-
         BasicUnstructuredPlanner()
         {
             vehicleLength = 3.2;
@@ -117,7 +115,7 @@ namespace fun
             figure5->showGrid();
             figure5->show();*/
 
-            plot_->createFigure();
+            plot_->initialize_plot();
 
             Depth = 360 / HeadingResolution;
             cco = new adore::fun::CollisionCheckOffline(vehicleWidth, vehicleLength, HeadingResolution, 10);
@@ -186,11 +184,15 @@ namespace fun
         validEnd = End.setPosition(final_state.getX(),final_state.getY(),final_state.getPSI(),Width,Length,Depth, adore::mad::CoordinateConversion::DegToRad(HeadingResolution),  plot_->figure3);
         //End.print();
     }                
-
-    void send()
+    std::vector<int>* getOccupancies_x()
     {
+        return OG.getOccupancies_x();
+    }
 
-    }    
+    std::vector<int>* getOccupancies_y()
+    {
+        return OG.getOccupancies_y();
+    }
              
     };
 }

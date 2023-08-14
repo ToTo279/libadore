@@ -211,6 +211,32 @@ namespace adore
             {
                 x = r* cos(beta);
                 y = r* sin(beta);
+            }
+
+            std::vector<int>* getOccupancies_x()
+            {
+                for (int r=0; r<Grid.rows(); ++r)
+                {                    
+                    for(int c=0; c<Grid.cols(); ++c)
+                    {
+                        if(Grid(r,c)) occupancies_x.push_back(c);
+                    }
+
+                }
+                return &occupancies_x;
+            }
+
+            std::vector<int>* getOccupancies_y()
+            {
+                for (int r=0; r<Grid.rows(); ++r)
+                {                    
+                    for(int c=0; c<Grid.cols(); ++c)
+                    {
+                        if(Grid(r,c)) occupancies_y.push_back(r);
+                    }
+
+                }
+                return &occupancies_x;
             }            
             private:
             //typedef adore::apps::PlotGraphSearch TPlotGraphSearch;
@@ -220,24 +246,9 @@ namespace adore
             std::vector<int> occupancies_x;
             std::vector<int> occupancies_y;
 
-            void occ ()
-            {
-                for (int r=0; r<Grid.rows(); ++r)
-                {                    
-                    for(int c=0; c<Grid.cols(); ++c)
-                    {
-                        
-                        occupancies_x.push_back(Grid(r,c));
-                          
 
-                    }
-                }
-            }
 
-            std::vector<int>* getOccupancies()
-            {
-                return &occupancies_x;
-            }
+            
 
             /*void polar2Cartesian(double &x, double &y, double r, double beta)
             {

@@ -35,42 +35,37 @@ namespace adore
     class PlotGraphSearch
     {
         private:
-            //typedef adore::env::OccupanyGrid TOccupanyGrid;
-            //TOccupanyGrid* occupany_grid;
             adore::env::OccupanyGrid occupany_grid;
             
-            //DLR_TS::PlotLab::FigureStubFactory fig_factory;
             double pi;
             std::string GREEN= "LineColor=0.75,1.,0.75;LineWidth=2";
             std::string RED= "LineColor=0.,0.,0.;LineWidth=3";
 
-            DLR_TS::PlotLab::FigureStubFactory* fig_factory_;
-            /*DLR_TS::PlotLab::AFigureStub* figure_lon1_;
-            DLR_TS::PlotLab::AFigureStub* figure_lon2_;
-            DLR_TS::PlotLab::AFigureStub* figure_lat1_;
-            DLR_TS::PlotLab::AFigureStub* figure_lat2_;*/
-            DLR_TS::PlotLab::AFigureStub* figure3;  
-            DLR_TS::PlotLab::AFigureStub* figure4; 
-            DLR_TS::PlotLab::AFigureStub* figure5;
+            DLR_TS::PlotLab::FigureStubFactory* fig_factory;
+            
+            // figures -> public
             adore::mad::AFeed<adore::fun::PlanningResult>* planning_result_feed_;
         
         public:
+            DLR_TS::PlotLab::AFigureStub* figure3;  
+            DLR_TS::PlotLab::AFigureStub* figure4; 
+            DLR_TS::PlotLab::AFigureStub* figure5;
 
             typedef bg::model::point<double,2,bg::cs::cartesian> Point;
             typedef bg::model::box<Point> box;
 
             void initialize_plot()
             {
-                fig_factory_ = new DLR_TS::PlotLab::FigureStubFactory();
-                figure3 = fig_factory.createFigureStub(3);
+                fig_factory = new DLR_TS::PlotLab::FigureStubFactory();
+                figure3 = fig_factory->createFigureStub(3);
                 figure3->showAxis();
                 figure3->showGrid();
                 figure3->show();  
-                figure4 = fig_factory.createFigureStub(4);
+                figure4 = fig_factory->createFigureStub(4);
                 figure4->showAxis();
                 figure4->showGrid();
                 figure4->show();   
-                figure5 = fig_factory.createFigureStub(5);
+                figure5 = fig_factory->createFigureStub(5);
                 figure5->showAxis();
                 figure5->showGrid();
                 figure5->show();
@@ -165,21 +160,16 @@ namespace adore
                 figure->plot(tag,&obst->vertices_x[0],&obst->vertices_y[0],2.5,obst->vertices_x.size(), GREEN);
 
             }
-            void PLOT(DLR_TS::PlotLab::AFigureStub* figure)
+            /*void PLOT(DLR_TS::PlotLab::AFigureStub* figure, std::vector<int>* x, y)
             {
-                
+                adore::env::OccupanyGrid::Grid Grid
                               
                 std::stringstream ss;
-                for (int r=0; r<occupany_grid.Grid.rows(); ++r)
+                for (int r=0; r<x->size(); ++r)
                 {                    
-                    for(int c=0; c<occupany_grid.Grid.cols(); ++c)
+                    for(int c=0; c<x->size(); ++c)
                     {
-                        ss.clear();
-                        ss.str("");
-                        ss << "f"<<r*occupany_grid.Grid.cols()+c;
-                        if(occupany_grid.Grid(r,c)) PLOT::plotPosition(ss.str(),c,r,figure,RED,0.05);
-                        //std::cout<<"\n"<<r<<"\t"<<c<<"\t"<<r*Grid.cols()+c;
-                        else PLOT::plotPosition(ss.str(),c,r,figure,GREEN,0.05);
+
                     }
 
                 }

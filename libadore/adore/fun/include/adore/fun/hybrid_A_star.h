@@ -131,6 +131,12 @@ namespace adore
                 return false;
 
             }
+
+            /*adore::env::OccupanyGrid* getOccupancyGrid()
+            {
+                return &occupancies_x;
+            }*/
+
             private:
 
             void evaluateSuccessors(Node<nH_Type,double>* node, GRID<Node<nH_Type,double>>* grid,GRID<Node<H_Type,int>>* h_grid, adore::env::OccupanyGrid* og,adore::fun::CollisionCheckOffline* cco, Node<nH_Type,double>* End,boost::heap::fibonacci_heap<Node<nH_Type,double>*, boost::heap::compare<compare>>* heap, double HeadingResolutionRad)
@@ -177,12 +183,6 @@ namespace adore
                 nonHolonomicPath = a_star.plan(grid ,og, Current->nH2H() , End->nH2H()); 
                 return std::max(dubinsPathLength,nonHolonomicPath);
             }
-
-            std::vector<int>* getOccupancyGrid()
-            {
-                return &occupancies_x;
-            }
-
 
         };
     }
