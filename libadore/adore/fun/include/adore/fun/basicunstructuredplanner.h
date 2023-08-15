@@ -161,7 +161,7 @@ namespace fun
          */
         virtual const SetPointRequest* getSetPointRequest()const override
         {
-            return &spr_;
+            return h_A_star->getSetPointRequest();
         }
         /**
          *  getCPUTime - return the time require for trajectory planning in seconds

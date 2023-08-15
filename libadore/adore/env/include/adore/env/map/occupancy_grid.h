@@ -239,8 +239,6 @@ namespace adore
                 return &occupancies_x;
             }            
             private:
-            //typedef adore::apps::PlotGraphSearch TPlotGraphSearch;
-            //TPlotGraphSearch plot_;
             //adore::apps::PlotGraphSearch plot_;
 
             std::vector<int> occupancies_x;

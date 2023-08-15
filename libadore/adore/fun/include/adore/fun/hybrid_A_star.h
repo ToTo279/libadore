@@ -21,6 +21,8 @@
 #include <adore/fun/tree_builder.h>
 //#include <adore/mad/catmull_rom_splines.h>
 #include <adore/fun/trajectory_smoothing.h>
+#include <adore/fun/setpointrequest.h>
+
 namespace adore
 {
 	namespace fun
@@ -43,6 +45,7 @@ namespace adore
             A_Star a_star;
             long double HeadingResolutionRad;
             int iteration;
+            adore::fun::SetPointRequest spr;
             struct compare
             {
                 bool operator()(Node<nH_Type,double>* n1, Node<nH_Type,double>* n2) const
@@ -56,6 +59,7 @@ namespace adore
             {
                 this->smoothing = smoothing;
                 pi = 3.141592653589793;
+                
 
             }
             void setSize(int Width, int Length)
@@ -116,7 +120,7 @@ namespace adore
                             {
                             Tree.push_p(predecessor_node);
                             Tree.build(Start,predecessor_node,vehicleWidth, vehicleLength, figure); 
-                            smoothing->get_pre_trajectory(og, &Tree.tree, &dubins.optPath.curve, vehicleWidth, vehicleLength, figure1,figure2);
+                            smoothing->get_pre_trajectory(og, &Tree.tree, &dubins.optPath.curve, vehicleWidth, vehicleLength, figure1,figure2, spr);
 
                                 return true;
                             }                           
@@ -130,6 +134,10 @@ namespace adore
                 iteration++;
                 return false;
 
+            }
+            adore::fun::SetPointRequest* getSetPointRequest()
+            {
+                return &spr;
             }
 
             /*adore::env::OccupanyGrid* getOccupancyGrid()

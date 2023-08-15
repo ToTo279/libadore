@@ -182,10 +182,7 @@ namespace adore
 
             bool collision_detection_passed = false;
 
-            planning_result.combined_maneuver.setPoints.clear();
             basicunstructuredplanner_->getSetPointRequest()->copyTo(planning_result.combined_maneuver,0);
-            planning_result.combined_maneuver.removeAfter(planning_request.t_emergency_start);
-            planning_result.combined_maneuver.setPoints.back().tEnd = planning_request.t_emergency_start;
 
             /*if(collision_detection_.isValid(planning_result.combined_maneuver))
             {

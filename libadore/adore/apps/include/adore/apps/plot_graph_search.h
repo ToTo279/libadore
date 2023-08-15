@@ -54,6 +54,9 @@ namespace adore
             typedef bg::model::point<double,2,bg::cs::cartesian> Point;
             typedef bg::model::box<Point> box;
 
+            std::vector<int> occupancies_x;
+            std::vector<int> occupancies_y;
+
             void initialize_plot()
             {
                 fig_factory = new DLR_TS::PlotLab::FigureStubFactory();
@@ -171,6 +174,23 @@ namespace adore
                     {
 
                     }
+
+                }
+                Eigen::MatrixXd Grid;
+                std::stringstream ss;
+
+                for (int r=0; r<x->size(); ++r)
+                {                    
+                for(int c=0; c<y->size(); ++c)
+                {
+                    Grid(x[r],y[c]) = 1;
+                                ss.clear();
+                                ss.str("");
+                                ss << "f"<<r*Grid.cols()+c;
+                                if(Grid(r,c)) PLOT::plotPosition(ss.str(),c,r,figure,RED,0.05);
+                                //std::cout<<"\n"<<r<<"\t"<<c<<"\t"<<r*Grid.cols()+c;
+                                else PLOT::plotPosition(ss.str(),c,r,figure,GREEN,0.05);
+                }
 
                 }
                 

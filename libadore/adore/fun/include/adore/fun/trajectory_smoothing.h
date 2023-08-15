@@ -87,7 +87,7 @@ namespace adore
             TrajectorySmoothing()
             {
                 const_velocity = 1.;
-                dt = 0.250;
+                dt = 0.250; //Time distance between optimization point 
                 states.resize(nX);
                 for(int i=0; i<nX; ++i) states[i].resize(OptimizationPoints+1);
                 eps = 1e-8;
@@ -96,7 +96,7 @@ namespace adore
                 pi = 3.141592653589793;
                 
             }
-            void get_pre_trajectory(adore::env::OccupanyGrid* og, TreeBuilder<nH_Type,double>::TrajectoryVector* tree, TreeBuilder<nH_Type,double>::TrajectoryVector* curve, double vehicleWidth, double vehicleLength, DLR_TS::PlotLab::AFigureStub* figure =nullptr,DLR_TS::PlotLab::AFigureStub* figure1 =nullptr)
+            void get_pre_trajectory(adore::env::OccupanyGrid* og, TreeBuilder<nH_Type,double>::TrajectoryVector* tree, TreeBuilder<nH_Type,double>::TrajectoryVector* curve, double vehicleWidth, double vehicleLength, adore::fun::SetPointRequest& spr, DLR_TS::PlotLab::AFigureStub* figure =nullptr,DLR_TS::PlotLab::AFigureStub* figure1 =nullptr)
             {
                 this->vehicleLength = vehicleLength;
                 this->vehicleWidth  = vehicleWidth;
@@ -213,6 +213,50 @@ namespace adore
                 figure1->plot("#opt_sa",&_s(0),&control[0], 1.1, N, BLUE); 
                 std::cout<<std::fixed<<"\n"<<iteration<<"\t"<<states[L].back() <<"\t"<<improvement<<"\n"; 
                 integrate(N,og,&control,BLUE,figure,true); 
+
+                if(states[X].size()!=N)
+                {
+                    std::cout<<"states[X].size "<<std::to_string(states[X].size())<<" N is"<<std::to_string(N)<<std::endl;
+                }
+                if(states[S].size()!=N)
+                {
+                    std::cout<<"states[S].size "<<std::to_string(states[S].size())<<" N is"<<std::to_string(N)<<std::endl;
+                }
+                spr.setPoints.clear();
+                for(auto j = 0; j<N; ++j)
+                {
+                    adore::fun::SetPoint sp;
+                    sp.tStart = j*dt;
+                    sp.tEnd = sp.tStart + dt;
+                    sp.x0ref.setX(states[X].at(j));
+                    sp.x0ref.setY(states[Y].at(j));
+                    sp.x0ref.setPSI(states[PSI].at(j));
+                    sp.x0ref.setvx((j==0 ? (states[S].at(j+1)-states[S].at(j)) : (states[S].at(j)-states[S].at(j-1)))/dt);
+                    sp.x0ref.setvy(0);
+                    sp.x0ref.setOmega((j==0 ? (states[PSI].at(j+1)-states[PSI].at(j)) : (states[PSI].at(j)-states[PSI].at(j-1)))/dt);
+                    if(j>1)
+                    {
+                        sp.x0ref.setAx((sp.x0ref.getvx() - spr.setPoints.back().x0ref.getvx())/dt);
+                    }
+                    else if(j==1)
+                    {
+                        sp.x0ref.setAx((sp.x0ref.getvx() - spr.setPoints.back().x0ref.getvx())/dt);
+                        spr.setPoints.back().x0ref.setAx((sp.x0ref.getvx() - spr.setPoints.back().x0ref.getvx())/dt);
+                    }
+                    sp.x0ref.setDelta(control.at(j));
+                    if(j>1)
+                    {
+                        sp.x0ref.setDAx((sp.x0ref.getAx() - spr.setPoints.back().x0ref.getAx())/dt);
+                    }
+                    else if(j==1)
+                    {
+                        sp.x0ref.setDAx((sp.x0ref.getAx() - spr.setPoints.back().x0ref.getAx())/dt);
+                        spr.setPoints.back().x0ref.setDAx((sp.x0ref.getAx() - spr.setPoints.back().x0ref.getAx())/dt);
+                    }
+                    sp.x0ref.setDDelta((j==0 ? (control.at(j+1)-control.at(j)) : (control.at(j)-control.at(j-1)))/dt);
+
+                    spr.push_back(sp);                    
+                }
                
                                         
             }
