@@ -42,6 +42,8 @@ namespace adore
             DLR_TS::PlotLab::FigureStubFactory* fig_factory;
 
             adore::mad::AFeed<adore::fun::PlanningResult>* planning_result_feed_;
+
+            Eigen::MatrixXd Grid;
         
         public:
             DLR_TS::PlotLab::AFigureStub* figure3;  
@@ -144,34 +146,38 @@ namespace adore
                 figure->plot(tag,&obst->vertices_x[0],&obst->vertices_y[0],2.5,obst->vertices_x.size(), GREEN);
 
             }
-            /*void PLOT(DLR_TS::PlotLab::AFigureStub* figure, std::vector<int>* x, y)
+            void makeGrid()
             {
-                adore::env::OccupanyGrid::Grid Grid
-                              
-                std::stringstream ss;
-                for (int r=0; r<x->size(); ++r)
-                {                    
-                    for(int c=0; c<x->size(); ++c)
-                    {
+                int Width = occupancies_y.at(occupancies_y.size()-1);
+                int Length = occupancies_x.at(occupancies_x.size()-1);
+                Grid = Eigen::MatrixXd::Zero(Width,Length);
 
+                for (int r=0; r<occupancies_y.size(); ++r)
+                {                    
+                    for(int c=0; c<occupancies_x.size(); ++c)
+                    {
+                        Grid(occupancies_y.at(r),occupancies_x.at(c)) = 1;
                     }
 
                 }
-                Eigen::MatrixXd Grid;
+                
+            }
+            void PLOT(DLR_TS::PlotLab::AFigureStub* figure)
+            {
+                makeGrid();
+                              
                 std::stringstream ss;
-
-                for (int r=0; r<x->size(); ++r)
+                for (int r=0; r<Grid.rows(); ++r)
                 {                    
-                for(int c=0; c<y->size(); ++c)
-                {
-                    Grid(x[r],y[c]) = 1;
-                                ss.clear();
-                                ss.str("");
-                                ss << "f"<<r*Grid.cols()+c;
-                                if(Grid(r,c)) PLOT::plotPosition(ss.str(),c,r,figure,RED,0.05);
-                                //std::cout<<"\n"<<r<<"\t"<<c<<"\t"<<r*Grid.cols()+c;
-                                else PLOT::plotPosition(ss.str(),c,r,figure,GREEN,0.05);
-                }
+                    for(int c=0; c<Grid.cols(); ++c)
+                    {
+                        ss.clear();
+                        ss.str("");
+                        ss << "f"<<r*Grid.cols()+c;
+                        if(Grid(r,c)) PLOT::plotPosition(ss.str(),c,r,figure,RED,0.05);
+                        //std::cout<<"\n"<<r<<"\t"<<c<<"\t"<<r*Grid.cols()+c;
+                        else PLOT::plotPosition(ss.str(),c,r,figure,GREEN,0.05);
+                    }
 
                 }
                 
