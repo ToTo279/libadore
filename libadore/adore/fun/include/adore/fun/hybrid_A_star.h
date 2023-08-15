@@ -120,7 +120,7 @@ namespace adore
                             {
                             Tree.push_p(predecessor_node);
                             Tree.build(Start,predecessor_node,vehicleWidth, vehicleLength, figure); 
-                            smoothing->get_pre_trajectory(og, &Tree.tree, &dubins.optPath.curve, vehicleWidth, vehicleLength, figure1,figure2, spr);
+                            smoothing->get_pre_trajectory(og, &Tree.tree, &dubins.optPath.curve, vehicleWidth, vehicleLength, spr, figure1, figure2);
 
                                 return true;
                             }                           
@@ -139,11 +139,6 @@ namespace adore
             {
                 return &spr;
             }
-
-            /*adore::env::OccupanyGrid* getOccupancyGrid()
-            {
-                return &occupancies_x;
-            }*/
 
             private:
 

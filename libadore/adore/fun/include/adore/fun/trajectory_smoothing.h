@@ -562,35 +562,7 @@ namespace adore
                 }
                 breaks[N-1] = breaks(N-1);
                 adore::mad::CubicPiecewiseFunction::toPolynomialFrom(pp,&breaks[0],&coef1[0],&coef2[0],&coef3[0],&coef4[0],N-1);           
-            }
-
-            /*void convert()
-            {
-                const adoreMatrix<double,1,0>& T;
-                const adoreMatrix<double,0,0>& X;
-                int N;
-                int maneuverID=0;
-                typedef adore::fun::SetPointRequest TSetPointRequest;
-                TSetPointRequest* setpointrequest_;
-
-                setpointrequest_.append();
-
-            }*/
-
-            /** * A vehicle state used as reference for the vehicle, containing feedforward control inputs.
-                 * [
-                 *   pX,
-                 *   pY,
-                 *   psi,
-                 *   vx,
-                 *   vy,	at COR
-                 *   omega,
-                 *   ax,
-                 *   delta,
-                 *   dax,
-                 *   ddelta
-                 * ]
-                 */                  
+            }                  
         };
     }
 }

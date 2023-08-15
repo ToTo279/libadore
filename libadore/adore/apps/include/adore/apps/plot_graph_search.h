@@ -18,9 +18,7 @@
 #include <adore/mad/coordinateconversion.h>
 #include "csaps.h"
 
-//#include <adore/fun/node.h>
-//#include <adore/env/map/occupancy_grid.h>
-//#include <adore/fun/dubins_curve.h>
+
 
 namespace adore
 {
@@ -42,8 +40,7 @@ namespace adore
             std::string RED= "LineColor=0.,0.,0.;LineWidth=3";
 
             DLR_TS::PlotLab::FigureStubFactory* fig_factory;
-            
-            // figures -> public
+
             adore::mad::AFeed<adore::fun::PlanningResult>* planning_result_feed_;
         
         public:
@@ -109,22 +106,6 @@ namespace adore
             {
 
             }
-
-            /*void createFigure()
-            {
-            figure3 = fig_factory.createFigureStub(3);
-            figure3->showAxis();
-            figure3->showGrid();
-            figure3->show();  
-            figure4 = fig_factory.createFigureStub(4);
-            figure4->showAxis();
-            figure4->showGrid();
-            figure4->show();   
-            figure5 = fig_factory.createFigureStub(5);
-            figure5->showAxis();
-            figure5->showGrid();
-            figure5->show(); 
-            }*/
 
 
 

@@ -21,10 +21,6 @@
 #include <boost/geometry.hpp>
 #include <eigen3/Eigen/Dense>
 
-//NEW
-//#include <adore/fun/basicunstructuredplanner.h>
-//#include <adore/apps/plot_graph_search.h>
-//#include <adore/fun/node.h>
 
 //#include <adore/fun
 namespace adore
@@ -239,8 +235,6 @@ namespace adore
                 return &occupancies_x;
             }            
             private:
-            //adore::apps::PlotGraphSearch plot_;
-
             std::vector<int> occupancies_x;
             std::vector<int> occupancies_y;
 
