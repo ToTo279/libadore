@@ -209,7 +209,7 @@ namespace adore
                 y = r* sin(beta);
             }
 
-            std::vector<int>* getOccupancies_x()
+            std::vector<double>* getOccupancies_x()
             {
                 for (int r=0; r<Grid.rows(); ++r)
                 {                    
@@ -222,7 +222,7 @@ namespace adore
                 return &occupancies_x;
             }
 
-            std::vector<int>* getOccupancies_y()
+            std::vector<double>* getOccupancies_y()
             {
                 for (int r=0; r<Grid.rows(); ++r)
                 {                    
@@ -235,8 +235,8 @@ namespace adore
                 return &occupancies_x;
             }            
             private:
-            std::vector<int> occupancies_x;
-            std::vector<int> occupancies_y;
+            std::vector<double> occupancies_x;
+            std::vector<double> occupancies_y;
 
 
 

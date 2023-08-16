@@ -146,23 +146,29 @@ namespace adore
                 figure->plot(tag,&obst->vertices_x[0],&obst->vertices_y[0],2.5,obst->vertices_x.size(), GREEN);
 
             }
-            void makeGrid()
+            void PLOT(DLR_TS::PlotLab::AFigureStub* figure)
             {
-                int Width = occupancies_y.at(occupancies_y.size()-1);
+                /*int Width = occupancies_y.at(occupancies_y.size()-1);
                 int Length = occupancies_x.at(occupancies_x.size()-1);
-                Grid = Eigen::MatrixXd::Zero(Width,Length);
+                Grid = Eigen::MatrixXd::Zero(Width,Length);*/
+
+                std::stringstream ss;
 
                 for (int r=0; r<occupancies_y.size(); ++r)
                 {                    
                     for(int c=0; c<occupancies_x.size(); ++c)
                     {
-                        Grid(occupancies_y.at(r),occupancies_x.at(c)) = 1;
+                        //Grid(occupancies_y.at(r),occupancies_x.at(c)) = 1;
+                        ss.clear();
+                        ss.str("");
+                        ss << "f"<<r*Grid.cols()+c;
+                        PLOT::plotPosition(ss.str(),occupancies_x.at(c),occupancies_y.at(r),figure,RED,0.05);
                     }
 
                 }
                 
             }
-            void PLOT(DLR_TS::PlotLab::AFigureStub* figure)
+            /*void PLOT(DLR_TS::PlotLab::AFigureStub* figure)
             {
                 makeGrid();
                               

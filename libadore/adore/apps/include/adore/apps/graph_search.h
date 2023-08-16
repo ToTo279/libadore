@@ -178,101 +178,12 @@ namespace adore
             
             basicunstructuredplanner_->getSetPointRequest()->copyTo(planning_result.nominal_maneuver);
             planning_result.nominal_maneuver_valid = true;
-            //auto x0em = basicunstructeredplanner_->getSetPointRequest()->interpolateSetPoint(planning_request.t_emergency_start,pvehicle_);
-
-            bool collision_detection_passed = false;
 
             basicunstructuredplanner_->getSetPointRequest()->copyTo(planning_result.combined_maneuver,0);
 
-            /*if(collision_detection_.isValid(planning_result.combined_maneuver))
-            {
-                collision_detection_passed = true;
-                break;
-            }*/
 
-
-            double front_buffer_space = pTacticalPlanner_->getCollisionDetectionFrontBufferSpace();
-            double lateral_precision = pTacticalPlanner_->getCollisionDetectionLateralPrecision();
-            adore::fun::SetPointRequestSwath spr_swath(
-                pvehicle_->get_a()+pvehicle_->get_b()+pvehicle_->get_c()+pvehicle_->get_d()+front_buffer_space,
-                pvehicle_->get_bodyWidth(),
-                pvehicle_->get_d(),//spr reference point at rear axle
-                lateral_precision);
-            spr_swath.setLonError(pTacticalPlanner_->getCollisionDetectionLongitudinalError());
-            spr_swath.setLatError(pTacticalPlanner_->getCollisionDetectionLateralError());
-            spr_swath.setDuration(ppred_->get_roadbased_prediction_duration());
-            spr_swath.append_cylinder_swath_linear(planning_result.combined_maneuver,planning_result.combined_maneuver_swath,true);
-            spr_swath.setAccelerationErrorSlow(pTacticalPlanner_->getNominalSwathAccelerationError());
-            spr_swath.append_cylinder_swath_linear(planning_result.nominal_maneuver,planning_result.nominal_maneuver_swath,true);
-
-            if(!collision_detection_passed)
-            {
-            planning_result.status_string = "collision detected for combined maneuver";    
-            return;          
-            }
-
-            planning_result.combined_maneuver.cropAfterFirstStop(0.3);
-            if(planning_result.combined_maneuver.setPoints.size()==0)
-            {
-            planning_result.status_string = "stopping";
-            return;
-            }
 
             planning_result.combined_maneuver_valid = true;
-            int laneid = 0;
-            /*adore::fun::SPRNavigationCostOnLane navcostOnLane(&three_lanes_,pTacticalPlanner_,laneid);
-            planning_result.objective_values.insert({navcostOnLane.getName(),
-                                                    navcostOnLane.getCost(planning_result.nominal_maneuver)});
-
-            adore::fun::SPRNormalizedNavigationCost navcostNormalized(&three_lanes_,pTacticalPlanner_,laneid);
-            planning_result.objective_values.insert({navcostNormalized.getName(),
-                                                    navcostNormalized.getCost(planning_result.nominal_maneuver)});
-            */
-
-            adore::fun::SPRLongitudinalAcceleration2Cost lacccost;
-            planning_result.objective_values.insert({lacccost.getName(),
-                                                    lacccost.getCost(planning_result.nominal_maneuver)});
-
-            adore::fun::SPRLongitudinalJerk2Cost ljerkcost;
-            planning_result.objective_values.insert({ljerkcost.getName(),
-                                                    ljerkcost.getCost(planning_result.nominal_maneuver)});
-
-            adore::fun::SPRAverageProgressLoss progressLoss(pTacticalPlanner_);
-            planning_result.objective_values.insert({progressLoss.getName(),
-                                                    progressLoss.getCost(planning_result.nominal_maneuver)});
-
-            planning_result.objective_values.insert({"const_penalty",const_penalty_});
-
-            //ttc cost
-            planning_result.objective_values.insert({ttcCost_.getName(),
-                                                    ttcCost_.getCost(planning_result.nominal_maneuver)});
-
-
-            switch(pTacticalPlanner_->getCoercionPreventionStrategy())
-            {
-            case 0://turned off
-                {
-                planning_result.objective_values.insert({coercion_detection_.getName(),0.0});
-                }
-                break;
-            case 1://encode as objective value
-                {
-                planning_result.objective_values.insert({coercion_detection_.getName(),
-                                                            coercion_detection_.isValid(planning_result.nominal_maneuver)
-                                                            ? 0.0 : 1.0});
-                }
-                break;
-            case 2://encode as constraint
-                {
-                bool coercion_detection_passed = coercion_detection_.isValid(planning_result.nominal_maneuver);
-                planning_result.combined_maneuver_valid = coercion_detection_passed && planning_result.combined_maneuver_valid;
-                if(!coercion_detection_passed)
-                {
-                    planning_result.status_string = "coercion detected for nominal maneuver";    
-                }
-                }
-                break;
-            }
         }
     };
 }
