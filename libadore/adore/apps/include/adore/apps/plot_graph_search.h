@@ -148,9 +148,6 @@ namespace adore
             }
             void PLOT(DLR_TS::PlotLab::AFigureStub* figure)
             {
-                /*int Width = occupancies_y.at(occupancies_y.size()-1);
-                int Length = occupancies_x.at(occupancies_x.size()-1);
-                Grid = Eigen::MatrixXd::Zero(Width,Length);*/
 
                 std::stringstream ss;
 
@@ -158,7 +155,6 @@ namespace adore
                 {                    
                     for(int c=0; c<occupancies_x.size(); ++c)
                     {
-                        //Grid(occupancies_y.at(r),occupancies_x.at(c)) = 1;
                         ss.clear();
                         ss.str("");
                         ss << "f"<<r*Grid.cols()+c;
@@ -168,7 +164,26 @@ namespace adore
                 }
                 
             }
-            /*void PLOT(DLR_TS::PlotLab::AFigureStub* figure)
+
+
+
+            void makeGrid(DLR_TS::PlotLab::AFigureStub* figure)
+            {
+                int Width = occupancies_y.at(occupancies_y.size()-1);
+                int Length = occupancies_x.at(occupancies_x.size()-1);
+                Grid = Eigen::MatrixXd::Zero(Width,Length);
+
+                for (int r=0; r<occupancies_y.size(); ++r)
+                {                    
+                    for(int c=0; c<occupancies_x.size(); ++c)
+                    {
+                        Grid(occupancies_y.at(r),occupancies_x.at(c)) = 1;
+                    }
+
+                }
+                
+            }
+            void PLOT(DLR_TS::PlotLab::AFigureStub* figure)
             {
                 makeGrid();
                               
