@@ -76,7 +76,7 @@ namespace adore
             void resize(int Width, int Length,DLR_TS::PlotLab::AFigureStub* figure =nullptr)
             {
                 figure->clear();  
-                Grid = Eigen::MatrixXd::Zero(Width,Length);
+                Grid = Eigen::MatrixXd::Zero(Width,Length);// Width=rows & Length=colums
                 _Obstacle obst_0;
                 obst_0.ID = 0;
                 obst_0.x = 16.;
@@ -209,7 +209,7 @@ namespace adore
                 y = r* sin(beta);
             }
 
-            std::vector<double>* getOccupancies_x()
+            void getOccupancies_x(std::vector<double>& occupancies_x)
             {
                 for (int r=0; r<Grid.rows(); ++r)
                 {                    
@@ -219,10 +219,9 @@ namespace adore
                     }
 
                 }
-                return &occupancies_x;
             }
 
-            std::vector<double>* getOccupancies_y()
+            void getOccupancies_y(std::vector<double>& occupancies_y)
             {
                 for (int r=0; r<Grid.rows(); ++r)
                 {                    
@@ -232,15 +231,17 @@ namespace adore
                     }
 
                 }
-                return &occupancies_x;
-            }            
+            }
+            int getWidth()
+            {
+                return Grid.rows();
+            }
+            int getLength()
+            {
+                return Grid.cols();
+            }        
             private:
-            std::vector<double> occupancies_x;
-            std::vector<double> occupancies_y;
 
-
-
-            
 
             /*void polar2Cartesian(double &x, double &y, double r, double beta)
             {

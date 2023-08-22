@@ -185,6 +185,24 @@ namespace adore
 
             planning_result.combined_maneuver_valid = true;
         }
+        void getOccupancies_x(std::vector<double>& v)
+        {
+            basicunstructuredplanner_->getOccupancies_x(v);
+        }
+
+        void getOccupancies_y(std::vector<double>& v)
+        {
+            basicunstructuredplanner_->getOccupancies_y(v);
+        }
+
+        int getWidth()
+        {
+            return basicunstructuredplanner_->getWidth();
+        }
+        int getLength()
+        {
+            return basicunstructuredplanner_->getLength();
+        }
     };
 }
 }

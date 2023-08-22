@@ -167,14 +167,23 @@ namespace fun
         validEnd = End.setPosition(final_state.getX(),final_state.getY(),final_state.getPSI(),Width,Length,Depth, adore::mad::CoordinateConversion::DegToRad(HeadingResolution),  plot_->figure3);
         //End.print();
     }                
-    std::vector<double>* getOccupancies_x()
+    void getOccupancies_x(std::vector<double>& v)
     {
-        return OG.getOccupancies_x();
+        OG.getOccupancies_x(v);
     }
 
-    std::vector<double>* getOccupancies_y()
+    void getOccupancies_y(std::vector<double>& v)
     {
-        return OG.getOccupancies_y();
+        OG.getOccupancies_y(v);
+    }
+
+    int getWidth()
+    {
+        return OG.getWidth();
+    }
+    int getLength()
+    {
+        return OG.getLength();
     }
              
     };
