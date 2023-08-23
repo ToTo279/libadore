@@ -73,7 +73,26 @@ namespace adore
             {
                 return obstacles;
             }
-            void resize(int Width, int Length,DLR_TS::PlotLab::AFigureStub* figure =nullptr)
+            void obstacle ()
+            {
+                for (int r=0; r<Grid.rows(); ++r)
+                {                    
+                    for(int c=0; c<Grid.cols(); ++c)
+                    {
+                        for(int i=0; i<obstacles.size(); ++i)
+                        {
+                            if(bg::within(Point(c,r),obstacles[i].poly))
+                        //if((r<15 && r>6 && c<18 && c> 14) || (r<12 && r>-1 && c<38 && c> 33) || (r<12 && r>8 && c<63 && c> 59) || (r<9 && r>5 && c<51 && c> 47))
+                            {
+                                Grid(r,c) = 1;
+                            }
+                        }
+
+                    }
+                }
+            }
+
+            /*void resize(int Width, int Length,DLR_TS::PlotLab::AFigureStub* figure =nullptr)
             {
                 figure->clear();  
                 Grid = Eigen::MatrixXd::Zero(Width,Length);// Width=rows & Length=colums
@@ -97,25 +116,13 @@ namespace adore
                 obstacles.push_back(obst_1);                
 
 
-
-
-
                 obstacle();
-                // WIEDER ENTKOMMENTIEREN
-
-
-               /*if(figure != nullptr)
-               {
-                   PLOT(figure);
-                   //plot_->PLOT(figure);
-                   //adore::apps::PlotGraphSearch::PLOT(figure);
-               }*/
 
 
                               
-            }
+            }*/
 
-            void calculateCircles(_Obstacle* obst,DLR_TS::PlotLab::AFigureStub* figure)
+            /*void calculateCircles(_Obstacle* obst,DLR_TS::PlotLab::AFigureStub* figure)
             {
                 obst->circles.clear();
                 double r = std::min(obst->length, obst->width) ;
@@ -141,7 +148,7 @@ namespace adore
                 std::cout<<"\nNum of circles: "<<obst->circles.size();
 
 
-            }
+            }*/
             
             /*void plotSoftRectangle(_Obstacle* obst,DLR_TS::PlotLab::AFigureStub* figure,std::string tag)
             {
@@ -249,24 +256,7 @@ namespace adore
                 y = r* sin(beta);
             }*/
 
-            void obstacle ()
-            {
-                for (int r=0; r<Grid.rows(); ++r)
-                {                    
-                    for(int c=0; c<Grid.cols(); ++c)
-                    {
-                        for(int i=0; i<obstacles.size(); ++i)
-                        {
-                            if(bg::within(Point(c,r),obstacles[i].poly))
-                        //if((r<15 && r>6 && c<18 && c> 14) || (r<12 && r>-1 && c<38 && c> 33) || (r<12 && r>8 && c<63 && c> 59) || (r<9 && r>5 && c<51 && c> 47))
-                            {
-                                Grid(r,c) = 1;
-                            }
-                        }
-
-                    }
-                }
-            }
+            
             
             std::string GREEN= "LineColor=0.75,1.,0.75;LineWidth=2";
             std::string RED= "LineColor=0.,0.,0.;LineWidth=3";
@@ -292,7 +282,7 @@ namespace adore
                 
             }*/
 
-            polygon rotation(_Obstacle* obst,DLR_TS::PlotLab::AFigureStub* figure)
+            /*polygon rotation(_Obstacle* obst,DLR_TS::PlotLab::AFigureStub* figure)
             {
                 obst->vertices_x.clear();
                 obst->vertices_y.clear();
@@ -319,7 +309,7 @@ namespace adore
                 //std::cout<<"\n"<<bg::dsv(configurationSpaceBoxes(i,j));
                 return rbb;
 
-            } 
+            }*/ 
             
 
 

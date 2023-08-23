@@ -44,6 +44,9 @@ namespace adore
             adore::mad::AFeed<adore::fun::PlanningResult>* planning_result_feed_;
 
             Eigen::MatrixXd Grid;
+            //typedef boost::container::vector<_Obstacle> obstacleList;
+            //obstacleList obstacles;
+            //polygon rectangularBox;
         
         public:
             DLR_TS::PlotLab::AFigureStub* figure3;  
@@ -146,24 +149,95 @@ namespace adore
                 figure->plot(tag,&obst->vertices_x[0],&obst->vertices_y[0],2.5,obst->vertices_x.size(), GREEN);
 
             }
-            /*void PLOT(DLR_TS::PlotLab::AFigureStub* figure)
+
+            void calculateCircles(adore::env::OccupanyGrid::_Obstacle* obst,DLR_TS::PlotLab::AFigureStub* figure)
             {
-
-                std::stringstream ss;
-
-                for (int r=0; r<occupancies_y.size(); ++r)
-                {                    
-                    for(int c=0; c<occupancies_x.size(); ++c)
-                    {
-                        ss.clear();
-                        ss.str("");
-                        ss << "f"<<r*Grid.cols()+c;
-                        PLOT::plotPosition(ss.str(),occupancies_x.at(c),occupancies_y.at(r),figure,RED,0.05);
-                    }
+                obst->circles.clear();
+                double r = std::min(obst->length, obst->width) ;
+                double l = std::max(obst->length, obst->width);
+                double x,y, tmp_x, tmp_y;
+                std::stringstream tag;
+                adore::env::OccupanyGrid::circle tmp_circle;
+                for(double  i=0.0; i<l - r/4.0; i=i+r*0.5)
+                {
+                    tmp_x = -l/2.0 + i + r/4.0;
+                    tmp_y = 0.0;;
+                    adore::env::OccupanyGrid::transformation(x,y,obst->alpha, tmp_x , tmp_y);
+                    x += obst->x ;
+                    y += obst->y ;
+                    tag << "circle"<<obst->ID<<"-"<<i;
+                    tmp_circle.x = x;
+                    tmp_circle.y = y;
+                    tmp_circle.r = r/2.;
+                    obst->circles.push_back(tmp_circle);
+                    PLOT::plotCircle(tag.str(),x,y,0.10, r/2., figure,"LineColor=0.8,0.8,0.8;LineWidth=0;FillColor=1,0,0");
 
                 }
+                std::cout<<"\nNum of circles: "<<obst->circles.size();
+
+
+            }
+
+            polygon rotation(adore::env::OccupanyGrid::_Obstacle* obst,DLR_TS::PlotLab::AFigureStub* figure)
+            {
+                obst->vertices_x.clear();
+                obst->vertices_y.clear();
+                double l= obst->length;
+                double w= obst->width;
+                double angle = obst->alpha;
+                box rectangle(Point(-l/2.0,-w/2.0),Point(l/2.0,w/2.0));
+                bg::assign(occupany_grid.rectangularBox,rectangle);                
+                polygon rbb;
+                double x = obst->x;
+                double y = obst->y;
+                std::vector<Point> tmp_p;
+                for(const auto&p: occupany_grid.rectangularBox.outer())
+                {
+                    tmp_p.push_back(Point(p.x()*cos(angle)-p.y()*sin(angle)+x,p.x()*sin(angle)+p.y()*cos(angle)+y));
+                    obst->vertices_x.push_back(p.x()*cos(angle)-p.y()*sin(angle)+x);   
+                    obst->vertices_y.push_back(p.x()*sin(angle)+p.y()*cos(angle)+y);                    
+                }
+                bg::assign_points(rbb,tmp_p);
+                bg::correct(rbb);
+                //std::cout<<"\n"<<bg::dsv(rbb);
+                figure->plot("#obst54654",&obst->vertices_x[0],&obst->vertices_y[0],2.5,obst->vertices_x.size(), GREEN);
                 
-            }*/
+                //std::cout<<"\n"<<bg::dsv(configurationSpaceBoxes(i,j));
+                return rbb;
+
+            }
+
+            void resize(int Width, int Length,DLR_TS::PlotLab::AFigureStub* figure =nullptr)
+            {
+                figure->clear();  
+                Grid = Eigen::MatrixXd::Zero(Width,Length);// Width=rows & Length=colums
+                adore::env::OccupanyGrid::_Obstacle obst_0;
+                obst_0.ID = 0;
+                obst_0.x = 16.;
+                obst_0.y = 10.;
+                obst_0.length = 10.;
+                obst_0.width = 3.;
+                obst_0.alpha = 0.17;
+                obst_0.poly = rotation(&obst_0,figure); 
+                occupany_grid.obstacles.push_back(obst_0);
+                adore::env::OccupanyGrid::_Obstacle obst_1;
+                obst_1.ID = 1;
+                obst_1.x = 25.;
+                obst_1.y = 2.;
+                obst_1.length = 3.;
+                obst_1.width = 2.;
+                obst_1.alpha = 0.37;
+                obst_1.poly = rotation(&obst_1,figure); 
+                occupany_grid.obstacles.push_back(obst_1);                
+
+
+                occupany_grid.obstacle();
+
+
+                              
+            }
+
+            
             void makeGrid(DLR_TS::PlotLab::AFigureStub* figure)
             {
                 int Width = occupancies_y.at(0);

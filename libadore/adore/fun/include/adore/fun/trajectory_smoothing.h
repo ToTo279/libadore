@@ -114,7 +114,7 @@ namespace adore
                     plot.plotPolygon(&obstacles[i],figure,poly.str());
                     //og->plotSoftRectangle(&obstacles[i],figure,s_rect.str());
                     //og->plotEllipse(&obstacles[i],figure,s_ellipse.str());
-                    og->calculateCircles(&obstacles[i],figure);
+                    plot.calculateCircles(&obstacles[i],figure);
                 }
                 
                 

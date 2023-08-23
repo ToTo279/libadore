@@ -102,7 +102,7 @@ namespace fun
 
             Depth = 360 / HeadingResolution;
             cco = new adore::fun::CollisionCheckOffline(vehicleWidth, vehicleLength, HeadingResolution, 10);
-            OG.resize(Width,Length,plot_->figure3);
+            plot_->resize(Width,Length,plot_->figure3);
             NH_GRID.resize(Width,Length,Depth);
             h_A_star->setSize(Width,Length);
             avg_time = 0.0;
