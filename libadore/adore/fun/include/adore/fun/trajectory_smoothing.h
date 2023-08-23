@@ -21,7 +21,7 @@
 #include "csaps.h"
 
 //NEW
-#include <adore/apps/plot_graph_search.h>
+#include <adore/apps/plot_occupancy_grid.h>
 
 namespace adore
 {
@@ -33,7 +33,7 @@ namespace adore
        	class TrajectorySmoothing
 		{
             private:
-            adore::apps::PlotGraphSearch plot;
+            adore::apps::PlotOccupanyGrid plot;
 
             double pi;
             env::OccupanyGrid::obstacleList obstacles;

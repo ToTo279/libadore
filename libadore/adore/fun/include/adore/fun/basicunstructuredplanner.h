@@ -47,7 +47,7 @@
 //#include "Quaternion.h"
 //#include <Matrix3x3.h>
 //#include <adore/fun/dubins_curve.h>
-#include <adore/apps/plot_graph_search.h>
+#include <adore/apps/plot_occupancy_grid.h>
 
 
 namespace adore
@@ -62,8 +62,8 @@ namespace fun
     class BasicUnstructuredPlanner : public ANominalPlanner
     {
         private:
-            typedef adore::apps::PlotGraphSearch TPlotGraphSearch;
-            TPlotGraphSearch* plot_;
+            typedef adore::apps::PlotOccupanyGrid TPlotOccupanyGrid;
+            TPlotOccupanyGrid* plot_;
 
             std::chrono::system_clock::time_point  startTime;
             std::chrono::system_clock::time_point  endTime;        

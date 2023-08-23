@@ -30,7 +30,7 @@ namespace adore
     using point_xy = bgm::d2::point_xy<double>; 
     using polygon = bgm::polygon<point_xy>;
 
-    class PlotGraphSearch
+    class PlotOccupanyGrid
     {
         private:
             adore::env::OccupanyGrid occupany_grid;
@@ -102,12 +102,12 @@ namespace adore
 
 
 
-            PlotGraphSearch()
+            PlotOccupanyGrid()
             {
               pi = 3.141592653589793;
             }
 
-            ~PlotGraphSearch()
+            ~PlotOccupanyGrid()
             {
 
             }

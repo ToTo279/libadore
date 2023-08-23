@@ -17,7 +17,7 @@
 #include <adore/apps/if_plotlab/plot_shape.h>
 
 //NEW
-#include <adore/apps/plot_graph_search.h>
+//#include <adore/apps/plot_occupancy_grid.h>
 
 #include <adore/fun/node.h>
 //#include <adore/env/map/occupancy_grid.h>
