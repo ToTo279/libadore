@@ -116,7 +116,19 @@ namespace fun
 
             setStart(initial_state);
             //TO DO: final_state erstellen
-            //setEnd(final_state);
+            VehicleMotionState9d final_state;
+            
+            final_state.setX(initial_state.getX()+20);
+			final_state.setY(initial_state.getY()+20);
+			final_state.setZ(initial_state.getZ());
+			final_state.setPSI(initial_state.getPSI());
+			final_state.setvx(initial_state.getvx());
+			final_state.setvy(initial_state.getvy());
+			final_state.setOmega(initial_state.getOmega());
+			final_state.setAx(initial_state.getAx());
+			final_state.setDelta(initial_state.getDelta());
+
+            setEnd(final_state);
 
             while(iteration<2 && validStart && validEnd)
             {
@@ -133,6 +145,40 @@ namespace fun
                 
             }
         }
+        /*
+                    adore::fun::SetPoint sp;
+                    sp.tStart = j*dt;
+                    sp.tEnd = sp.tStart + dt;
+                    sp.x0ref.setX(states[X].at(j));
+                    sp.x0ref.setY(states[Y].at(j));
+                    sp.x0ref.setPSI(states[PSI].at(j));
+                    sp.x0ref.setvx((j==0 ? (states[S].at(j+1)-states[S].at(j)) : (states[S].at(j)-states[S].at(j-1)))/dt);
+                    sp.x0ref.setvy(0);
+                    sp.x0ref.setOmega((j==0 ? (states[PSI].at(j+1)-states[PSI].at(j)) : (states[PSI].at(j)-states[PSI].at(j-1)))/dt);
+                    if(j>1)
+                    {
+                        sp.x0ref.setAx((sp.x0ref.getvx() - spr.setPoints.back().x0ref.getvx())/dt);
+                    }
+                    else if(j==1)
+                    {
+                        sp.x0ref.setAx((sp.x0ref.getvx() - spr.setPoints.back().x0ref.getvx())/dt);
+                        spr.setPoints.back().x0ref.setAx((sp.x0ref.getvx() - spr.setPoints.back().x0ref.getvx())/dt);
+                    }
+                    sp.x0ref.setDelta(control.at(j));
+                    if(j>1)
+                    {
+                        sp.x0ref.setDAx((sp.x0ref.getAx() - spr.setPoints.back().x0ref.getAx())/dt);
+                    }
+                    else if(j==1)
+                    {
+                        sp.x0ref.setDAx((sp.x0ref.getAx() - spr.setPoints.back().x0ref.getAx())/dt);
+                        spr.setPoints.back().x0ref.setDAx((sp.x0ref.getAx() - spr.setPoints.back().x0ref.getAx())/dt);
+                    }
+                    sp.x0ref.setDDelta((j==0 ? (control.at(j+1)-control.at(j)) : (control.at(j)-control.at(j-1)))/dt);
+
+                    spr.push_back(sp);
+                    
+        */
 
  
         virtual bool hasValidPlan()const override
