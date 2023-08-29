@@ -18,6 +18,10 @@
 #include <adore/mad/coordinateconversion.h>
 #include "csaps.h"
 
+//NEW
+#include <adore/env/map/occupancy_grid.h>
+#include <adore/mad/com_patterns.h>
+#include <adore/fun/tac/planning_result.h>
 
 
 namespace adore
@@ -56,8 +60,8 @@ namespace adore
             typedef bg::model::point<double,2,bg::cs::cartesian> Point;
             typedef bg::model::box<Point> box;
 
-            std::vector<int> occupancies_x;
-            std::vector<int> occupancies_y;
+            std::vector<double> occupancies_x;
+            std::vector<double> occupancies_y;
 
             void initialize_plot()
             {
