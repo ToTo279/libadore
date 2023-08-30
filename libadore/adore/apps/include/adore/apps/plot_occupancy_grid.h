@@ -45,7 +45,7 @@ namespace adore
 
             DLR_TS::PlotLab::FigureStubFactory* fig_factory;
 
-            adore::mad::AFeed<adore::fun::PlanningResult>* planning_result_feed_;
+            //adore::mad::AFeed<adore::fun::PlanningResult>* planning_result_feed_;
 
             Eigen::MatrixXd Grid;
             //typedef boost::container::vector<_Obstacle> obstacleList;
@@ -298,11 +298,7 @@ namespace adore
 
             void run()
             {
-                fun::PlanningResult latest_planning_result;
-                if (planning_result_feed_->hasNext())
-                {
-                    
-                }
+                PLOT(figure5);
             }
     };
 
